@@ -5,12 +5,10 @@ participant server
 
     browser->>server: POST /new_note and sending user inputted data
     activate server
-
-    Note left of server: Process form data and add new note
-
-
     server-->>browser: HTTP 302 Redirect to /notes
     deactivate server
+
+    Note left of server: Process form data and add new note
 
     browser->>server: HTTP GET /notes
     activate server
@@ -28,6 +26,7 @@ participant server
     deactivate server
 
     browser->>server: HTTP GET /data.json
+    activate server
     server-->>browser: [{ "content": "HTML is easy", "date": "2023-1-1" }, ... ]
     deactivate server
 
