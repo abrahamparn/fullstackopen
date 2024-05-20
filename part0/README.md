@@ -74,3 +74,24 @@ participant user
 ```
 
 ## New note in Single page app diagram
+
+```mermaid
+
+sequenceDiagram
+participant browser
+participant server
+participant user
+
+user->>browser: INPUT DATA & CLICK BUTTON
+activate browser
+
+browser->>server: POST /new_note_spa
+activate server
+server-->>browser: 201 Created
+deactivate server
+
+browser-->>user: Update UI
+deactivate browser
+
+
+```
