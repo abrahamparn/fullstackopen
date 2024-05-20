@@ -60,7 +60,7 @@ participant user
 
     browser->>server: GET main.js
     activate server
-    server-->>broser:give SPA.js
+    server-->>browser:give SPA.js
     deactivate server
 
     browser->>server: GET data.json
