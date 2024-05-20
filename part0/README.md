@@ -2,12 +2,8 @@
 sequenceDiagram
 participant browser
 participant server
-participant user
 
-    user->>browser: Fill out form and click submit
-    activate browser
-
-    browser->>server: POST /new_note
+    browser->>server: POST /new_note and sending user inputted data
     activate server
 
     Note left of server: Process form data and add new note
