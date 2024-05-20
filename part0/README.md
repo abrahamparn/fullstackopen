@@ -1,3 +1,7 @@
+# Sequence Diagram
+
+## user creates a new note
+
 ```mermaid
 sequenceDiagram
 participant browser
@@ -12,7 +16,7 @@ participant server
 
     browser->>server: HTTP GET /notes
     activate server
-    server-->>browser: HTML for Notes pgae
+    server-->>browser: HTML for Note Page
     deactivate server
 
     browser->>server: HTTP GET /main.css
@@ -32,3 +36,41 @@ participant server
 
     Note right of browser: The browser executes the callback function that renders the notes
 ```
+
+## Single page app diagram
+
+```mermaid
+sequenceDiagram
+participant browser
+participant server
+participant user
+
+    user->>browser: GO TO SPA
+    activate browser
+
+    browser->>server: GET /spa
+    activate server
+    server-->>browser:HTML for Note Pages
+    deactivate server
+
+    browser->>server: GET main.css
+    activate server
+    server-->>browser:give main.css
+    deactivate server
+
+    browser->>server: GET main.js
+    activate server
+    server-->>broser:give SPA.js
+    deactivate server
+
+    browser->>server: GET data.json
+    activate server
+    server-->>browser: give spa.json
+    deactivate server
+
+    browser-->>user: Show Data
+    deactivate browser
+
+```
+
+## New note in Single page app diagram
