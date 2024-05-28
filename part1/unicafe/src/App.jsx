@@ -7,9 +7,12 @@ const Button = (props) => {
 
 const StatisitcLine = ({ text, value }) => {
   return (
-    <p>
-      {text} {value}
-    </p>
+    <>
+      <tr>
+        <td> {text}</td>
+        <td>{value}</td>
+      </tr>
+    </>
   );
 };
 function App() {
@@ -36,8 +39,14 @@ function App() {
   const Statistics = ({ good, bad, all }) => {
     return (
       <>
-        <p>average {(good - bad) / all ? (good - bad) / all : 0}</p>
-        <p>positive {(good / all) * 100 ? (good / all) * 100 : 0} %</p>
+        <tr>
+          <td>average</td>
+          <td>{(good - bad) / all ? (good - bad) / all : 0}</td>
+        </tr>
+        <tr>
+          <td>positive</td>
+          <td>{(good / all) * 100 ? (good / all) * 100 : 0}</td>
+        </tr>
       </>
     );
   };
@@ -57,12 +66,18 @@ function App() {
         </>
       ) : (
         <>
-          <StatisitcLine text="good" value={good} />
-          <StatisitcLine text="neutral" value={neutral} />
-          <StatisitcLine text="bad" value={bad} />
-          <StatisitcLine text="all" value={all} />
+          <h2>Statistics</h2>
 
-          <Statistics good={good} bad={bad} all={all} />
+          <table>
+            <tbody>
+              <StatisitcLine text="good" value={good} />
+              <StatisitcLine text="neutral" value={neutral} />
+              <StatisitcLine text="bad" value={bad} />
+              <StatisitcLine text="all" value={all} />
+
+              <Statistics good={good} bad={bad} all={all} />
+            </tbody>
+          </table>
         </>
       )}
     </>

@@ -1,0 +1,17 @@
+.App {
+  text-align: left;
+}
+
+button {
+  margin: 5px;
+  padding: 10px;
+}
+
+h1,
+h2 {
+  font-family: Arial, sans-serif;
+}
+
+p {
+  font-family: Arial, sans-serif;
+}
