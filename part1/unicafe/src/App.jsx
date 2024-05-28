@@ -8,15 +8,22 @@ function App() {
   const [good, setGood] = useState(0);
   const [bad, setBad] = useState(0);
   const [neutral, setNeutral] = useState(0);
+  const [all, setAll] = useState(0);
 
   const handleGood = () => {
-    setGood(good + 1);
+    const newGood = good + 1;
+    setGood(newGood);
+    setAll(all + 1);
   };
   const handleBad = () => {
-    setBad(bad + 1);
+    const newBad = bad + 1;
+    setBad(newBad);
+    setAll(all + 1);
   };
   const handleNeutral = () => {
-    setNeutral(neutral + 1);
+    const newNeutral = neutral + 1;
+    setNeutral(newNeutral);
+    setAll(all + 1);
   };
   return (
     <>
@@ -26,15 +33,12 @@ function App() {
       <Button setFeedbackValue={handleNeutral} text="Neutral" />
 
       <ul>
-        <li>
-          <p>good {good}</p>
-        </li>
-        <li>
-          <p>bad {bad}</p>
-        </li>
-        <li>
-          <p>neutral {neutral}</p>
-        </li>
+        <li>good {good}</li>
+        <li>bad {bad}</li>
+        <li>neutral {neutral}</li>
+        <li>all {all}</li>
+        <li>average {(good - bad) / all ? (good - bad) / all : 0}</li>
+        <li>positive {(good / all) * 100 ? (good / all) * 100 : 0} %</li>
       </ul>
     </>
   );
