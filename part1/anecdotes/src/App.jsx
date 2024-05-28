@@ -15,28 +15,47 @@ function App() {
   ];
 
   const [selected, setSelected] = useState(0);
+  const [biggest, setBiggest] = useState(0);
   const [vote, setVote] = useState(
     Array.from({ length: anecdotes.length }, () => 0)
   );
-  console.log(vote);
   const randomizer = () => {
     let theRandomNumber =
       Math.floor(Math.random() * (anecdotes.length - 1 - 0 + 1)) + 0;
     setSelected(theRandomNumber);
+    console.log(vote);
   };
 
-  const handleVote = () => {
+  const handleVote = async () => {
     const newVotes = [...vote];
     newVotes[selected] += 1;
     setVote(newVotes);
+    setBiggest(handleMostVote(newVotes));
+  };
+  const handleMostVote = (newVotes) => {
+    let biggest = 0;
+    let theIndex = 0;
+    for (const item in newVotes) {
+      if (newVotes[item] > biggest) {
+        biggest = newVotes[item];
+        theIndex = item;
+      }
+    }
+    console.log("thebiggest", biggest);
+    return theIndex;
   };
 
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <p>{anecdotes[selected]}</p>
       <p>has {vote[selected]} vote(s)</p>
       <button onClick={handleVote}>vote</button>
       <button onClick={randomizer}>next anecdote</button>
+      <h2>Anecdote with the most votes</h2>
+      <p>
+        {anecdotes[biggest]} has {vote[biggest]} votes
+      </p>
     </div>
   );
 }
