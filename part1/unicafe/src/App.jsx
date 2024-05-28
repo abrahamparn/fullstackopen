@@ -45,7 +45,7 @@ function App() {
         </tr>
         <tr>
           <td>positive</td>
-          <td>{(good / all) * 100 ? (good / all) * 100 : 0}</td>
+          <td>{(good / all) * 100 ? (good / all) * 100 : 0} %</td>
         </tr>
       </>
     );
