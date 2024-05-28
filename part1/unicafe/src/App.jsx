@@ -4,6 +4,14 @@ import "./App.css";
 const Button = (props) => {
   return <button onClick={props.setFeedbackValue}>{props.text}</button>;
 };
+
+const StatisitcLine = ({ text, value }) => {
+  return (
+    <p>
+      {text} {value}
+    </p>
+  );
+};
 function App() {
   const [good, setGood] = useState(0);
   const [bad, setBad] = useState(0);
@@ -36,15 +44,27 @@ function App() {
   return (
     <>
       <h1>Give Feedback</h1>
-      <Button setFeedbackValue={handleGood} text="Good" />
-      <Button setFeedbackValue={handleBad} text="Bad" />
-      <Button setFeedbackValue={handleNeutral} text="Neutral" />
+      <div>
+        <Button setFeedbackValue={handleGood} text="Good" />
+        <Button setFeedbackValue={handleNeutral} text="Neutral" />
+        <Button setFeedbackValue={handleBad} text="Bad" />
+      </div>
 
-      <p>good {good}</p>
-      <p>bad {bad}</p>
-      <p>neutral {neutral}</p>
-      <p>all {all}</p>
-      <Statistics good={good} bad={bad} all={all} />
+      {all === 0 ? (
+        <>
+          <h2>Statistics</h2>
+          <p>No Feedback Given</p>
+        </>
+      ) : (
+        <>
+          <StatisitcLine text="good" value={good} />
+          <StatisitcLine text="neutral" value={neutral} />
+          <StatisitcLine text="bad" value={bad} />
+          <StatisitcLine text="all" value={all} />
+
+          <Statistics good={good} bad={bad} all={all} />
+        </>
+      )}
     </>
   );
 }
