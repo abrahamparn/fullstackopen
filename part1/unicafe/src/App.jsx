@@ -25,6 +25,14 @@ function App() {
     setNeutral(newNeutral);
     setAll(all + 1);
   };
+  const Statistics = ({ good, bad, all }) => {
+    return (
+      <>
+        <p>average {(good - bad) / all ? (good - bad) / all : 0}</p>
+        <p>positive {(good / all) * 100 ? (good / all) * 100 : 0} %</p>
+      </>
+    );
+  };
   return (
     <>
       <h1>Give Feedback</h1>
@@ -32,14 +40,11 @@ function App() {
       <Button setFeedbackValue={handleBad} text="Bad" />
       <Button setFeedbackValue={handleNeutral} text="Neutral" />
 
-      <ul>
-        <li>good {good}</li>
-        <li>bad {bad}</li>
-        <li>neutral {neutral}</li>
-        <li>all {all}</li>
-        <li>average {(good - bad) / all ? (good - bad) / all : 0}</li>
-        <li>positive {(good / all) * 100 ? (good / all) * 100 : 0} %</li>
-      </ul>
+      <p>good {good}</p>
+      <p>bad {bad}</p>
+      <p>neutral {neutral}</p>
+      <p>all {all}</p>
+      <Statistics good={good} bad={bad} all={all} />
     </>
   );
 }
