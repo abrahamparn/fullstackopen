@@ -1,4 +1,7 @@
 import { useState } from "react";
+import Filter from "./components/Filter";
+import PersonForm from "./components/PersonForm";
+import Persons from "./components/Persons";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -54,30 +57,19 @@ function App() {
   return (
     <>
       <h2>Phoenbook</h2>
-      <div>
-        filter shown with <input value={newSearch} onChange={handleNewSearch} />
-      </div>
-      <h2>New Entry</h2>
-      <form onSubmit={addNewPerson}>
-        <div>
-          name: <input value={newName} onChange={handleNewName} />
-        </div>
-        <div>
-          Number: <input value={newNumber} onChange={handleNewNumber} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <Filter value={newSearch} onChange={handleNewSearch} />
 
+      <h2>New Entry</h2>
+
+      <PersonForm
+        addNewPerson={addNewPerson}
+        newName={newName}
+        handleNewName={handleNewName}
+        newNumber={newNumber}
+        handleNewNumber={handleNewNumber}
+      />
       <h2>Numbers</h2>
-      {nameToShow.map((item, index) => {
-        return (
-          <div key={index}>
-            {item.name} ({item.number})
-          </div>
-        );
-      })}
+      <Persons persons={nameToShow} />
     </>
   );
 }
