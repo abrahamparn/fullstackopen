@@ -1,20 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 
 function App() {
   const [count, setCount] = useState(0);
-  const [persons, setPersons] = useState([
-    {
-      name: "Abraham Naiborhu",
-      number: "+62-813-8830-2150",
-    },
-    {
-      name: "Arto Hellas",
-      number: "+61-813-8830-2150",
-    },
-  ]);
+  const [persons, setPersons] = useState([]);
+  const PhoneData = () => {
+    const promise = axios.get("http://localhost:3001/persons");
+    const eventHandler = (response) => {
+      setPersons(response.data);
+    };
+    promise.then(eventHandler);
+  };
+
+  useEffect(PhoneData, []);
 
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
