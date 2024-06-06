@@ -56,6 +56,20 @@ function App() {
   const handleNewSearch = (event) => {
     setNewSearch(event.target.value);
   };
+  const handleDeletePerson = (id, name) => {
+    const confirmDeletion = window.confirm(
+      `Are you sure you want to delete ${name}`
+    );
+    if (confirmDeletion) {
+      personService
+        .deletePerson(id)
+        .then(() => setPersons(persons.filter((a) => a.id !== id)))
+        .catch((error) => {
+          console.error("Failed to delete person:", error);
+          // Optionally, handle the error, e.g., show a notification to the user
+        });
+    }
+  };
   return (
     <>
       <h2>Phoenbook</h2>
@@ -71,7 +85,21 @@ function App() {
         handleNewNumber={handleNewNumber}
       />
       <h2>Numbers</h2>
-      <Persons persons={nameToShow} />
+      {/* <Persons
+        persons={nameToShow}
+        deleteOnePerson={() => {
+          handleDeletePerson(nameToShow.id);
+        }}
+      /> */}
+      {persons.map((person) => [
+        <Persons
+          key={person.id}
+          person={person}
+          deleteOnePerson={() => {
+            handleDeletePerson(person.id, person.name);
+          }}
+        />,
+      ])}
     </>
   );
 }

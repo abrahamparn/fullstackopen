@@ -1,15 +1,12 @@
 import React from "react";
 
-const Persons = ({ persons }) => {
+const Persons = ({ person, deleteOnePerson }) => {
   return (
     <>
-      {persons.map((item, index) => {
-        return (
-          <div key={index}>
-            {item.name} ({item.number})
-          </div>
-        );
-      })}
+      <div>
+        {person.name} ({person.number})
+        <button onClick={deleteOnePerson}>delete</button>
+      </div>
     </>
   );
 };
