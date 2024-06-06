@@ -3,16 +3,13 @@ import axios from "axios";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import personService from "./service/persons";
 
 function App() {
   const [count, setCount] = useState(0);
   const [persons, setPersons] = useState([]);
   const PhoneData = () => {
-    const promise = axios.get("http://localhost:3001/persons");
-    const eventHandler = (response) => {
-      setPersons(response.data);
-    };
-    promise.then(eventHandler);
+    personService.getAll().then((personData) => setPersons(personData));
   };
 
   useEffect(PhoneData, []);
@@ -43,11 +40,10 @@ function App() {
       setNewNumber("");
       return;
     }
-    const setToDatabase = axios
-      .post("http://localhost:3001/persons", personObject)
-      .then((response) => {
-        setPersons(persons.concat(response.data));
-      });
+    axios;
+    personService.createPerson(personObject).then((aPerson) => {
+      setPersons(persons.concat(aPerson));
+    });
     setNewName("");
     setNewNumber("");
   };
