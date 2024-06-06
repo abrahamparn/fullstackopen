@@ -31,6 +31,7 @@ function App() {
     const personObject = {
       name: newName,
       number: newNumber,
+      id: (persons.length + 1).toString(),
     };
     const personExsist = persons.some(
       (person) => person.name === personObject.name
@@ -42,7 +43,11 @@ function App() {
       setNewNumber("");
       return;
     }
-    setPersons(persons.concat(personObject));
+    const setToDatabase = axios
+      .post("http://localhost:3001/persons", personObject)
+      .then((response) => {
+        setPersons(persons.concat(response.data));
+      });
     setNewName("");
     setNewNumber("");
   };
