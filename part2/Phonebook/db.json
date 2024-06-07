@@ -1,24 +1,24 @@
 {
   "persons": [
     {
-      "id": "5",
+      "id": "1",
       "name": "Abraham Naiborhu",
-      "number": "081388302150"
+      "number": "0813123213"
     },
     {
-      "id": "6",
-      "name": "Hebat Banget Sih ini mah",
-      "number": "123123123"
+      "id": "2",
+      "name": "asdfasdf",
+      "number": "sfdasdfdf"
     },
     {
-      "id": "7",
-      "name": "KEREEENNN",
-      "number": "08080808"
+      "id": "3",
+      "name": "Abrahanm ",
+      "number": "123123"
     },
     {
-      "id": "8",
-      "name": "HEHE",
-      "number": "13123"
+      "id": "4",
+      "name": "dicoding",
+      "number": "0123123"
     }
   ]
 }

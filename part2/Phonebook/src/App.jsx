@@ -35,12 +35,29 @@ function App() {
     );
 
     if (personExsist) {
-      alert(`${personObject.name} is already added to phonebook`);
-      setNewName("");
-      setNewNumber("");
+      const confirmDeletion = window.confirm(
+        `${personObject.name} is already added to the phonebook, replace the old phone number with the new one?`
+      );
+      if (confirmDeletion) {
+        let changeNumber = persons.find((n) => n.name === personObject.name);
+
+        console.log(changeNumber);
+        changeNumber.number = personObject.number;
+        personService
+          .updatePerson(changeNumber.id, changeNumber)
+          .then((result) => {
+            setPersons(
+              persons.map((person) =>
+                person.name === result.name ? result : person
+              )
+            );
+          });
+        setNewName("");
+        setNewNumber("");
+      }
+
       return;
     }
-    axios;
     personService.createPerson(personObject).then((aPerson) => {
       setPersons(persons.concat(aPerson));
     });
@@ -91,7 +108,7 @@ function App() {
           handleDeletePerson(nameToShow.id);
         }}
       /> */}
-      {persons.map((person) => [
+      {nameToShow.map((person) => [
         <Persons
           key={person.id}
           person={person}
