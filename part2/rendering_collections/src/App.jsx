@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import noteService from "./services/notes";
+import Notification from "./components/Notification";
+import Footer from "./components/Footer";
 
 import Note from "./components/Note";
 import "./App.css";
@@ -9,6 +11,7 @@ const App = () => {
   const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState("a new note...");
   const [showAll, setShowAll] = useState(true);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const hook = () => {
     noteService.getAll().then((initialNotes) => {
@@ -26,7 +29,11 @@ const App = () => {
         setNotes(notes.map((n) => (n.id !== id ? n : notesChanged)));
       })
       .catch((error) => {
-        alert(`the Note ${note.content} was already deleted from server`);
+        setErrorMessage(`Note ${note.content} was already removed from server`);
+        setTimeout(() => {
+          setErrorMessage(null);
+          console.log("error");
+        }, 5000);
         setNotes(notes.filter((n) => n.id !== id));
       });
   };
@@ -59,7 +66,11 @@ const App = () => {
         setNotes(notes.filter((n) => n.id !== data.id));
       })
       .catch((error) => {
-        alert("cannot delete: " + error.message);
+        setErrorMessage(`Note was already removed from server`);
+        setTimeout(() => {
+          setErrorMessage(null);
+          console.log("error");
+        }, 5000);
         setNotes(notes.filter((n) => n.id !== id));
       });
   };
@@ -67,6 +78,7 @@ const App = () => {
   return (
     <div>
       <h1>Notes</h1>
+      <Notification message={errorMessage} />
       <button onClick={() => setShowAll(!showAll)}>
         show {showAll ? "Important" : "all"}
       </button>
@@ -84,6 +96,8 @@ const App = () => {
         <input value={newNote} onChange={handleNoteChange} />
         <button type="submit"> save</button>
       </form>
+
+      <Footer />
     </div>
   );
 };

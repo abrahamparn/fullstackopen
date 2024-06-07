@@ -4,10 +4,12 @@ import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import personService from "./service/persons";
+import Notification from "../../rendering_collections/src/components/Notification";
 
 function App() {
   const [count, setCount] = useState(0);
   const [persons, setPersons] = useState([]);
+  const [message, setMessage] = useState(null);
   const PhoneData = () => {
     personService.getAll().then((personData) => setPersons(personData));
   };
@@ -51,6 +53,13 @@ function App() {
                 person.name === result.name ? result : person
               )
             );
+            setMessage({
+              message: "Successfully added " + result.name,
+              status: "green",
+            });
+            setTimeout(() => {
+              setMessage(null);
+            }, 5000);
           });
         setNewName("");
         setNewNumber("");
@@ -60,6 +69,13 @@ function App() {
     }
     personService.createPerson(personObject).then((aPerson) => {
       setPersons(persons.concat(aPerson));
+      setMessage({
+        message: "Successfully added " + aPerson.name,
+        status: "green",
+      });
+      setTimeout(() => {
+        setMessage(null);
+      }, 5000);
     });
     setNewName("");
     setNewNumber("");
@@ -82,7 +98,15 @@ function App() {
         .deletePerson(id)
         .then(() => setPersons(persons.filter((a) => a.id !== id)))
         .catch((error) => {
-          console.error("Failed to delete person:", error);
+          setMessage({
+            message: "Failed to delete person:",
+            error,
+            status: "red",
+          });
+          setTimeout(() => {
+            setMessage(null);
+            console.log("error");
+          }, 5000);
           // Optionally, handle the error, e.g., show a notification to the user
         });
     }
@@ -90,6 +114,7 @@ function App() {
   return (
     <>
       <h2>Phoenbook</h2>
+      <Notification TheMessage={message} />
       <Filter value={newSearch} onChange={handleNewSearch} />
 
       <h2>New Entry</h2>
