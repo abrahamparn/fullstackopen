@@ -1,31 +1,6 @@
 {
   "persons": [
     {
-      "id": "1",
-      "name": "Abraham Naiborhu",
-      "number": "123123123123213"
-    },
-    {
-      "id": "2",
-      "name": "asdfasdf",
-      "number": "123123"
-    },
-    {
-      "id": "3",
-      "name": "Abrahanm ",
-      "number": "123123"
-    },
-    {
-      "id": "4",
-      "name": "dicoding",
-      "number": "0123123"
-    },
-    {
-      "id": "5",
-      "name": "Testing",
-      "number": "081231238"
-    },
-    {
       "id": "6",
       "name": "Testing Abraham",
       "number": "12341234"
@@ -33,11 +8,6 @@
     {
       "id": "7",
       "name": "asdfasdfasdf",
-      "number": "12341234"
-    },
-    {
-      "id": "8",
-      "name": "asdfasdfasdfasdfasdf",
       "number": "12341234"
     }
   ]

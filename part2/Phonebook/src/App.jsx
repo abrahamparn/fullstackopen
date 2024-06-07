@@ -96,17 +96,28 @@ function App() {
     if (confirmDeletion) {
       personService
         .deletePerson(id)
-        .then(() => setPersons(persons.filter((a) => a.id !== id)))
+        .then(() => {
+          setPersons(persons.filter((a) => a.id !== id));
+          let deleted = persons.find((a) => a.id !== id);
+          setMessage({
+            message: "Successfully deleted " + deleted.name,
+            status: "green",
+          });
+          setTimeout(() => {
+            setMessage(null);
+          }, 5000);
+        })
         .catch((error) => {
           setMessage({
-            message: "Failed to delete person:",
-            error,
+            message: "Failed to delete person: " + error.message,
             status: "red",
           });
           setTimeout(() => {
             setMessage(null);
             console.log("error");
           }, 5000);
+          setPersons(persons.filter((a) => a.id !== id));
+
           // Optionally, handle the error, e.g., show a notification to the user
         });
     }
