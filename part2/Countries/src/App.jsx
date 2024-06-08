@@ -8,6 +8,7 @@ function App() {
   const [countries, setCountries] = useState([]);
   const [filter, setFilter] = useState("");
   const [loading, setLoading] = useState(true);
+  const [selectedCountry, setSelectedCountry] = useState(null);
 
   const handleNewFilter = (event) => {
     setFilter(event.target.value);
@@ -25,10 +26,15 @@ function App() {
     setLoading(false);
   }, []);
 
+  const showCountryDetails = (country) => {
+    setSelectedCountry(country);
+  };
+
   const checkCountry = () => {
     if (filter === "" || filter === null) {
       return <h3>Search for a country</h3>;
     }
+
     const filteredCountries = countries.filter((country) =>
       country.name.common.toLowerCase().includes(filter.toLowerCase())
     );
@@ -38,40 +44,56 @@ function App() {
     }
 
     if (filteredCountries.length > 1) {
-      return (
-        <ul>
-          {filteredCountries.map((country, index) => (
-            <li key={index}>{country.name.common}</li>
-          ))}
-        </ul>
-      );
+      return filteredCountries.map((country, index) => (
+        <div key={index}>
+          <p>{country.name.common}</p>
+          <button onClick={() => showCountryDetails(country)}>Show</button>
+        </div>
+      ));
     }
 
     if (filteredCountries.length === 1) {
-      const country = filteredCountries[0];
-      return (
-        <div>
-          <h2>{country.name.common}</h2>
-          <p>capital: {country.capital}</p>
-          <p>area: {country.area}</p>
-          <h3>languages:</h3>
-          <ul>
-            {Object.values(country.languages).map((language, index) => (
-              <li key={index}>{language}</li>
-            ))}
-          </ul>
-          <img src={country.flags.png} alt={`flag of ${country.name.common}`} />
-        </div>
-      );
+      return renderCountryDetails(filteredCountries[0]);
     }
 
-    return <h3>No matches found</h3>;
+    return <h3>No matches found or wait for a while</h3>;
   };
+
+  const renderCountryDetails = (country) => {
+    return (
+      <div>
+        <h2>{country.name.common}</h2>
+        <p>capital: {country.capital}</p>
+        <p>area: {country.area}</p>
+        <h3>languages:</h3>
+        <ul>
+          {Object.values(country.languages).map((language, index) => (
+            <li key={index}>{language}</li>
+          ))}
+        </ul>
+        <img src={country.flags.png} alt={`flag of ${country.name.common}`} />
+      </div>
+    );
+  };
+
   return (
     <>
       <h1>Search Country</h1>
       <Filter value={filter} onChange={handleNewFilter} />
-      {loading ? <h1>Wait for a second</h1> : checkCountry()}
+      {loading ? (
+        <h1>Wait for a second</h1>
+      ) : (
+        <>
+          {selectedCountry ? (
+            <div>
+              <button onClick={() => setSelectedCountry(null)}>Back</button>
+              {renderCountryDetails(selectedCountry)}
+            </div>
+          ) : (
+            checkCountry()
+          )}
+        </>
+      )}
     </>
   );
 }
