@@ -1,17 +1,18 @@
 import { useState, useEffect } from "react";
-
 import Countries from "./service/Countries";
-
 import "./App.css";
 import Filter from "./component/Filter";
+
 function App() {
   const [countries, setCountries] = useState([]);
   const [filter, setFilter] = useState("");
   const [loading, setLoading] = useState(true);
   const [selectedCountry, setSelectedCountry] = useState(null);
+  const [weather, setWeather] = useState(null);
 
   const handleNewFilter = (event) => {
     setFilter(event.target.value);
+    setSelectedCountry(null);
   };
 
   useEffect(() => {
@@ -21,13 +22,28 @@ function App() {
       if (item) {
         setCountries(item);
       }
+      setLoading(false);
     };
     loadCountries();
-    setLoading(false);
   }, []);
 
   const showCountryDetails = (country) => {
     setSelectedCountry(country);
+  };
+
+  const callTheWeatherApi = async (capital) => {
+    console.log(capital[0]);
+    console.log("TESTING", weather && capital[0] === weather.location.name);
+    if (weather && capital[0] === weather.location.name) {
+      console.log("Weather", weather);
+
+      return;
+    }
+    let weatherData = await Countries.getDataWeather(capital[0]);
+    console.log(weatherData.location.name);
+    setWeather(weatherData);
+
+    console.log("Weather", weather);
   };
 
   const checkCountry = () => {
@@ -53,7 +69,9 @@ function App() {
     }
 
     if (filteredCountries.length === 1) {
-      return renderCountryDetails(filteredCountries[0]);
+      const country = filteredCountries[0];
+      callTheWeatherApi(country.capital); // Fetch weather data when there's only one country
+      return renderCountryDetails(country);
     }
 
     return <h3>No matches found or wait for a while</h3>;
@@ -72,6 +90,20 @@ function App() {
           ))}
         </ul>
         <img src={country.flags.png} alt={`flag of ${country.name.common}`} />
+        {weather ? (
+          country.capital[0] === weather.location.name ? (
+            <div>
+              <h3>Weather in {weather.location.name}</h3>
+              <p>temperature: {weather.current.temp_c}°C</p>
+              <img src={weather.current.condition.icon} alt="weather icon" />
+              <p>{weather.current.condition.text}</p>
+            </div>
+          ) : (
+            <></>
+          )
+        ) : (
+          <></>
+        )}
       </div>
     );
   };
