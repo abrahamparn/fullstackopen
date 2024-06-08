@@ -8,7 +8,7 @@ import Note from "./components/Note";
 import "./App.css";
 
 const App = () => {
-  const [notes, setNotes] = useState([]);
+  const [notes, setNotes] = useState(null);
   const [newNote, setNewNote] = useState("a new note...");
   const [showAll, setShowAll] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
@@ -38,7 +38,6 @@ const App = () => {
       });
   };
 
-  console.log("render", notes.length, "notes");
   const notesToShow = showAll ? notes : notes.filter((note) => note.important);
   const addNote = (event) => {
     event.preventDefault();
@@ -74,6 +73,9 @@ const App = () => {
         setNotes(notes.filter((n) => n.id !== id));
       });
   };
+  if (!notes) {
+    return <h1>HAI HEHHEHE</h1>;
+  }
 
   return (
     <div>
