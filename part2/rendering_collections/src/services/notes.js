@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseUrl = "http://localhost:3001/notes/";
+const baseUrl = "http://localhost:3001/api/notes/";
 
 // const getAll = async () => {
 //   const request = axios.get(baseUrl);
@@ -32,7 +32,13 @@ const update = async (id, newObject) => {
 const doDelete = async (id) => {
   const request = axios.delete(`${baseUrl}${id}`);
   const response = await request;
-  return response.data;
+  if (response.status === 200) {
+    console.log(response.data);
+    return response.data;
+  }
+  if (response.status === 400) {
+    throw new Error("Cannot find id in database");
+  }
 };
 export default {
   getAll,

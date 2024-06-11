@@ -74,13 +74,13 @@ const App = () => {
       });
   };
   if (!notes) {
-    return <h1>HAI HEHHEHE</h1>;
+    return <h1>CANNOT TALK TO SERVER</h1>;
   }
 
   return (
     <div>
       <h1>Notes</h1>
-      <Notification message={errorMessage} />
+      <Notification TheMessage={errorMessage} />
       <button onClick={() => setShowAll(!showAll)}>
         show {showAll ? "Important" : "all"}
       </button>
