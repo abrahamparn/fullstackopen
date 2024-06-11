@@ -4,8 +4,7 @@ import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import personService from "./service/persons";
-import Notification from "../../rendering_collections/src/components/Notification";
-
+import Notification from "./components/Notification";
 function App() {
   const [count, setCount] = useState(0);
   const [persons, setPersons] = useState([]);
@@ -125,7 +124,7 @@ function App() {
   return (
     <>
       <h2>Phoenbook</h2>
-      <Notification TheMessage={message} />
+      <Notification message={message} />
       <Filter value={newSearch} onChange={handleNewSearch} />
 
       <h2>New Entry</h2>
