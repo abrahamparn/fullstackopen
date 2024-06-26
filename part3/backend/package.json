@@ -7,17 +7,24 @@
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon index.js",
-    "build:ui": "@powershell Remove-Item -Recurse -Force dist && cd ../../part2/rendering_collections && npm run build && @powershell Copy-Item dist -Recurse ../../part3/backend/"
+    "build:ui": "@powershell Remove-Item -Recurse -Force dist && cd ../../part2/rendering_collections && npm run build && @powershell Copy-Item dist -Recurse ../../part3/backend/",
+    "lint": "eslint ."
   },
   "keywords": [],
   "author": "Abraham Naiborhu",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "json-parser": "^3.1.2"
+    "json-parser": "^3.1.2",
+    "mongoose": "^8.4.1"
   },
   "devDependencies": {
+    "@eslint/js": "^9.5.0",
+    "@stylistic/eslint-plugin-js": "^2.3.0",
+    "eslint": "^9.5.0",
+    "globals": "^15.6.0",
     "nodemon": "^3.1.3"
   }
 }

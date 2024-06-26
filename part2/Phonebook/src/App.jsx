@@ -59,23 +59,43 @@ function App() {
             setTimeout(() => {
               setMessage(null);
             }, 5000);
+          })
+          .catch((error) => {
+            setMessage({
+              message: `Failed to add ${personObject.name}: ${error.response.data.error}`,
+              status: "red",
+            });
+            setTimeout(() => {
+              setMessage(null);
+            }, 5000);
+            PhoneData();
           });
         setNewName("");
         setNewNumber("");
       }
-
       return;
     }
-    personService.createPerson(personObject).then((aPerson) => {
-      setPersons(persons.concat(aPerson));
-      setMessage({
-        message: "Successfully added " + aPerson.name,
-        status: "green",
+    personService
+      .createPerson(personObject)
+      .then((aPerson) => {
+        setPersons(persons.concat(aPerson));
+        setMessage({
+          message: "Successfully added " + aPerson.name,
+          status: "green",
+        });
+        setTimeout(() => {
+          setMessage(null);
+        }, 5000);
+      })
+      .catch((error) => {
+        setMessage({
+          message: `Failed to add ${personObject.name}: ${error.response.data.error}`,
+          status: "red",
+        });
+        setTimeout(() => {
+          setMessage(null);
+        }, 5000);
       });
-      setTimeout(() => {
-        setMessage(null);
-      }, 5000);
-    });
     setNewName("");
     setNewNumber("");
   };
