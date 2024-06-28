@@ -71,3 +71,34 @@ describe("mostBlogs", () => {
     assert.strictEqual(result.blogs, 3);
   });
 });
+
+describe("mostLikes", () => {
+  test("finds the author with the most likes", () => {
+    const result = listHelper.mostLikes(blogTest);
+    const expected = {
+      author: "Edsger W. Dijkstra",
+      likes: 17,
+    };
+
+    assert.deepStrictEqual(result, expected);
+  });
+
+  test("returns one of the top authors if there is a tie", () => {
+    const additionalBlogs = [
+      ...blogTest,
+      {
+        _id: "5a422bc61b54a676234d17fd",
+        title: "Another blog",
+        author: "Robert C. Martin",
+        url: "http://www.example.com",
+        likes: 5,
+        __v: 0,
+      },
+    ];
+    const result = listHelper.mostLikes(additionalBlogs);
+    const expectedAuthors = ["Edsger W. Dijkstra", "Robert C. Martin"];
+
+    assert.ok(expectedAuthors.includes(result.author));
+    assert.strictEqual(result.likes, 17);
+  });
+});
