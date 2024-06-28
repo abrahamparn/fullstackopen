@@ -3,5 +3,9 @@ part0/node_modules
 part1/*/node_modules
 part2/*/node_modules
 part3/*/node_modules
+part3/*/.env
 part4/*/node_modules
 part5/*/node_modules
+*/*/node_modules
+*/*/.env
+part4/*/.env
