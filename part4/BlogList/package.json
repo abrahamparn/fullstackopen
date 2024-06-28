@@ -4,7 +4,7 @@
   "description": "Block list backend",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node --test",
     "start": "node index.js",
     "dev": "nodemon index.js",
     "build:ui": "@powershell Remove-Item -Recurse -Force dist && cd ../../part2/rendering_collections && npm run build && @powershell Copy-Item dist -Recurse ../../part3/backend/",
