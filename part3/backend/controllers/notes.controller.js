@@ -2,9 +2,9 @@ const express = require("express");
 const notesRouter = express.Router();
 const Note = require("../models/note");
 
-notesRouter.get("./", (request, response) => {
+notesRouter.get("/", (request, response) => {
   Note.find({}).then((notes) => {
-    res.json(notes);
+    response.json(notes);
   });
 });
 
