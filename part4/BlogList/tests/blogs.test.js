@@ -5,40 +5,19 @@ const assert = require("node:assert");
 const app = require("../app");
 const api = supertest(app);
 const mongoose = require("mongoose");
-
+const helper = require("./blog.helper.test");
 describe("Blog List Testing", () => {
-  const initialBlog = [
-    {
-      title: "On my way to riches",
-      author: "Abraham Naiborhu",
-      url: "https://nothing.com",
-      likes: 500,
-    },
-    {
-      title: "Not the best of the world",
-      author: "T. R. J.",
-      url: "https://not_nothing.com",
-      likes: 300,
-    },
-    {
-      title: "How could it be so hard?",
-      author: "Abraham P. N.",
-      url: "https://nothingnothing.com",
-      likes: 100,
-    },
-  ];
-
   beforeEach(async () => {
     await Blog.deleteMany({});
-    for (let blog of initialBlog) {
+    for (let blog of helper.initialBlog) {
       let blogObject = new Blog(blog);
       await blogObject.save();
     }
   });
 
   test("The blog list application returns the correct amount of blog posts.", async () => {
-    const response = await api.get("/api/blog");
-    assert.strictEqual(response.body.length, initialBlog.length);
+    const theNotes = await helper.blogsInDb();
+    assert.strictEqual(theNotes.length, helper.initialBlog.length);
   });
 
   test("The unique identifier property of the blog posts is named id", async () => {
@@ -47,6 +26,22 @@ describe("Blog List Testing", () => {
 
     assert(blog.id !== undefined, "Blog post id is not defined");
     assert(blog._id === undefined, "Blog post _id should not be returned");
+  });
+
+  test("Successfully create a post with http", async () => {
+    const newBlog = {
+      title: "UNTUK TEST",
+      author: "HP",
+      url: "https://test.com",
+      likes: 1000,
+    };
+    await api
+      .post("/api/blog")
+      .send(newBlog)
+      .expect(201)
+      .expect("Content-Type", /application\/json/);
+    let length = await api.get("/api/blog");
+    assert.strictEqual(length.body.length, helper.initialBlog.length + 1);
   });
 
   after(async () => {
