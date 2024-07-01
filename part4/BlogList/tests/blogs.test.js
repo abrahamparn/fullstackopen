@@ -41,6 +41,14 @@ describe("Blog List Testing", () => {
     assert.strictEqual(response.body.length, initialBlog.length);
   });
 
+  test("The unique identifier property of the blog posts is named id", async () => {
+    const response = await api.get("/api/blog");
+    const blog = response.body[0];
+
+    assert(blog.id !== undefined, "Blog post id is not defined");
+    assert(blog._id === undefined, "Blog post _id should not be returned");
+  });
+
   after(async () => {
     await mongoose.connection.close();
   });
