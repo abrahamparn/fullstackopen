@@ -8,10 +8,10 @@ POST http://localhost:3003/api/blog
 Content-Type: application/json
 
 {
-    "title": "Nothing",
-    "author":"Abraham",
-    "url":"https://nothing.com",
-    "likes":400
+    "title": "How could it be so hard?",
+    "author":"Abraham P. N.",
+    "url":"https://nothingnothing.com",
+    "likes":100
 }
 
 
