@@ -22,18 +22,36 @@ blogRouter.get("/:id", async (request, response, next) => {
 
 blogRouter.post("/", async (request, response, next) => {
   try {
-    const body = request.body;
+    const { title, author, url, likes } = request.body;
+
+    if (!title || !url) {
+      return response.status(400).json({ error: "title and url are required" });
+    }
+
     const blog = new Blog({
-      title: body.title,
-      author: body.author,
-      url: body.url,
-      likes: body.likes === undefined ? 0 : body.likes,
+      title,
+      author,
+      url,
+      likes: likes === undefined ? 0 : likes,
     });
 
-    let resultBlog = await blog.save();
+    const resultBlog = await blog.save();
     return response.status(201).json(resultBlog);
   } catch (err) {
     next(err);
+  }
+});
+
+blogRouter.delete("/:id", async (request, response, next) => {
+  try {
+    const result = await Blog.findById(request.params.id);
+    if (!result) {
+      return response.status(400).json({ message: "The blog does not exist" });
+    }
+    await Blog.findByIdAndDelete(request.params.id);
+    response.status(200).json(result).end();
+  } catch (exception) {
+    next(exception);
   }
 });
 
