@@ -89,7 +89,6 @@ describe("Blog List Testing", () => {
     test("a blog can be deleted", async () => {
       const listBlogs = await helper.blogsInDb();
       const blogToBeDeleted = listBlogs[0];
-      console.log("blogid", blogToBeDeleted.id);
 
       await api.delete(`/api/blog/${blogToBeDeleted.id}`).expect(200);
 
@@ -101,6 +100,31 @@ describe("Blog List Testing", () => {
 
     test("Wrong id for deletion", async () => {
       await api.delete("/api/blog/invalidId").expect(400);
+    });
+  });
+
+  describe("Testing PUT request", () => {
+    test("a blog can be updated", async () => {
+      const listBlogs = await helper.blogsInDb();
+      const blogToBeUpdated = listBlogs[0];
+
+      const updatedBlog = {
+        ...blogToBeUpdated,
+        likes: blogToBeUpdated.likes + 1,
+      };
+
+      const response = await api
+        .put(`/api/blog/${blogToBeUpdated.id}`)
+        .send(updatedBlog)
+        .expect(200)
+        .expect("Content-Type", /application\/json/);
+
+      assert.strictEqual(response.body.likes, blogToBeUpdated.likes + 1);
+    });
+
+    test("updating a blog with a wrong id", async () => {
+      let invalidId = "asdfasdfasdf";
+      await api.put(`/api/blog/${invalidId}`).expect(400);
     });
   });
 

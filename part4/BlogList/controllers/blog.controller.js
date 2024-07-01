@@ -55,4 +55,24 @@ blogRouter.delete("/:id", async (request, response, next) => {
   }
 });
 
+blogRouter.put("/:id", async (request, response, next) => {
+  try {
+    const { title, author, url, likes } = request.body;
+
+    const result = await Blog.findById(request.params.id);
+    if (!result) {
+      return response.status(400).json({ message: "The blog does not exist" });
+    }
+
+    const updatedBlog = await Blog.findByIdAndUpdate(
+      request.params.id,
+      { title, author, url, likes },
+      { new: true, runValidators: true, context: "query" }
+    );
+    response.status(200).json(updatedBlog);
+  } catch (exception) {
+    next(exception);
+  }
+});
+
 module.exports = blogRouter;
