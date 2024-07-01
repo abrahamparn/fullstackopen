@@ -40,8 +40,27 @@ describe("Blog List Testing", () => {
       .send(newBlog)
       .expect(201)
       .expect("Content-Type", /application\/json/);
-    let length = await api.get("/api/blog");
-    assert.strictEqual(length.body.length, helper.initialBlog.length + 1);
+
+    let theNotes = await helper.blogsInDb();
+    assert.strictEqual(theNotes.length, helper.initialBlog.length + 1);
+
+    let isExists = theNotes.map((m) => m.title);
+    assert(isExists.includes("UNTUK TEST"));
+  });
+
+  test("If the likes property is missing from the request, it will default to the value 0", async () => {
+    const newBlog = {
+      title: "UNTUK TEST",
+      author: "HP",
+      url: "https://test.com",
+    };
+    let response = await api
+      .post("/api/blog")
+      .send(newBlog)
+      .expect(201)
+      .expect("Content-Type", /application\/json/);
+
+    assert.strictEqual(response.body.likes, 0);
   });
 
   after(async () => {
