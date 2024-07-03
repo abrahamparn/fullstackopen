@@ -1,0 +1,23 @@
+@url = http://localhost:3003/api/users
+###
+GET {{url}}
+
+### 1st User
+POST {{url}}
+Content-Type: application/json
+
+{
+    "username":"abrahamparn",
+    "name":"Abraham",
+    "password":"secret"
+}
+
+### 2nd User
+POST {{url}}
+Content-Type: application/json
+
+{
+    "username":"mumput",
+    "name":"Mumtasyfa",
+    "password":"secret"
+}

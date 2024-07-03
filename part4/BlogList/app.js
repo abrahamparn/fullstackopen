@@ -3,6 +3,7 @@ const logger = require("./utils/logger");
 const config = require("./utils/config");
 const middleware = require("./utils/middleware");
 const blogRouter = require("./controllers/blog.controller");
+const userRouter = require("./controllers/users.controller");
 const cors = require("cors");
 
 //INSERT ROUTER
@@ -35,6 +36,7 @@ app.get("/test", (request, response) => {
 });
 
 app.use("/api/blog", blogRouter);
+app.use("/api/users", userRouter);
 
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
