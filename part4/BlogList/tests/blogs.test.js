@@ -5,7 +5,7 @@ const assert = require("node:assert");
 const app = require("../app");
 const api = supertest(app);
 const mongoose = require("mongoose");
-const helper = require("./blog.helper.test");
+const helper = require("./blog.test.helper");
 describe("Blog List Testing", () => {
   beforeEach(async () => {
     await Blog.deleteMany({});

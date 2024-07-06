@@ -4,7 +4,7 @@
   "description": "Block list backend",
   "main": "index.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test node --test",
+    "test": "cross-env NODE_ENV=test node --test --test-concurrency=1",
     "start": "cross-env NODE_ENV=production node index.js",
     "dev": "cross-env NODE_ENV=deevlopment nodemon index.js",
     "build:ui": "@powershell Remove-Item -Recurse -Force dist && cd ../../part2/rendering_collections && npm run build && @powershell Copy-Item dist -Recurse ../../part3/backend/",

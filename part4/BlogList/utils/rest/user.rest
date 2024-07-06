@@ -17,7 +17,27 @@ POST {{url}}
 Content-Type: application/json
 
 {
-    "username":"mumput",
+    "username":"mumputs",
     "name":"Mumtasyfa",
     "password":"secret"
+}
+
+### this should fail POST
+POST {{url}}
+Content-Type: application/json
+
+{
+    "username":"mu",
+    "name":"mu",
+    "password":"secret"
+}
+
+### this should fail POST
+POST {{url}}
+Content-Type: application/json
+
+{
+    "username":"mumumumu",
+    "name":"mu",
+    "password":"se"
 }
