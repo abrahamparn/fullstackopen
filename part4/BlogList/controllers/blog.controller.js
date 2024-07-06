@@ -1,10 +1,14 @@
 const express = require("express");
 const blogRouter = express.Router();
 const Blog = require("../models/blog.model");
+const User = require("../models/user.model");
 
 blogRouter.get("/", async (request, response, next) => {
   try {
-    let result = await Blog.find({});
+    let result = await Blog.find({}).populate("user", {
+      username: 1,
+      name: 1,
+    });
     return response.status(200).json(result);
   } catch (err) {
     next(err);
@@ -22,10 +26,15 @@ blogRouter.get("/:id", async (request, response, next) => {
 
 blogRouter.post("/", async (request, response, next) => {
   try {
-    const { title, author, url, likes } = request.body;
+    const { title, author, url, likes, userId } = request.body;
+
+    const user = await User.findById(userId);
 
     if (!title || !url) {
       return response.status(400).json({ error: "title and url are required" });
+    }
+    if (!user) {
+      return response.status(400).json({ error: "User id is not included" });
     }
 
     const blog = new Blog({
@@ -33,10 +42,14 @@ blogRouter.post("/", async (request, response, next) => {
       author,
       url,
       likes: likes === undefined ? 0 : likes,
+      user: user.id,
     });
 
-    const resultBlog = await blog.save();
-    return response.status(201).json(resultBlog);
+    const savedBlog = await blog.save();
+    console.log(savedBlog);
+    user.blogs = user.blogs.concat(savedBlog._id);
+    user.save();
+    return response.status(201).json(savedBlog);
   } catch (err) {
     next(err);
   }
