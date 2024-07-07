@@ -29,6 +29,7 @@ mongoose
 app.use(cors());
 app.use(express.json());
 app.use(middleware.requestLogger);
+app.use(middleware.tokenExtractor);
 
 app.get("/test", (request, response) => {
   return response.status(200).json({

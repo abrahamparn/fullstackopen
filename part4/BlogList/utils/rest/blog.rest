@@ -10,7 +10,7 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-    "title": "Nomor dua konten?",
+    "title": "Nomor dua konten puluh empat?",
     "author":"Abraham P. N.",
     "url":"https://nothingnothing.com",
     "likes":100,
