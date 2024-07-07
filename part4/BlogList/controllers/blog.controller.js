@@ -64,22 +64,14 @@ blogRouter.post("/", async (request, response, next) => {
 
 blogRouter.delete("/:id", async (request, response, next) => {
   try {
-    const decodedToken = jwt.verify(request.token, process.env.SECRET);
-    console.log(decodedToken);
-    if (!decodedToken) {
-      return response.status(401).json({ error: "Invalid Token" });
-    }
-
-    let userExists = await User.findById(decodedToken.id);
+    let tokenUserId = request.tokenUserId; //The one whosets the request.userId is userExtractor middleware
+    let userExists = await User.findById(tokenUserId);
 
     const result = await Blog.findById(request.params.id);
 
     if (!result) {
       return response.status(400).json({ message: "The blog does not exist" });
     }
-    console.log("userExists.id.toString(): ", userExists.id.toString());
-    console.log("result.user.id.toString():", result.user.id.toString());
-    console.log("result", result);
 
     if (userExists.id.toString() !== result.user.toString()) {
       return response.status(403).json({

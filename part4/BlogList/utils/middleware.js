@@ -1,4 +1,5 @@
 const logger = require("./logger");
+const jwt = require("jsonwebtoken");
 
 const requestLogger = (request, response, next) => {
   logger.info("Method:", request.method);
@@ -13,13 +14,38 @@ const unknownEndpoint = (req, res) => {
 };
 
 const tokenExtractor = (req, res, next) => {
-  const authorization = req.get("authorization");
-  if (authorization && authorization.startsWith("Bearer ")) {
-    req.token = authorization.replace("Bearer ", "");
+  try {
+    const authorization = req.get("authorization");
+    if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
+      req.token = authorization.slice(7);
+    } else {
+      req.token = null; // Explicitly set token to null if not present
+    }
+  } catch (error) {
+    req.token = null; // Handle any unexpected errors gracefully
+  } finally {
+    next(); // Ensure the next middleware is called
   }
-  next();
 };
 
+const userExtractor = (req, res, next) => {
+  try {
+    const token = req.token;
+    if (token) {
+      const decodedToken = jwt.verify(token, process.env.SECRET);
+      req.tokenUsername = decodedToken.user;
+      req.tokenUserId = decodedToken.id;
+    } else {
+      req.tokenUser = ntokenUl;
+      req.tokenUserId = null;
+    }
+  } catch (exception) {
+    req.tokenUser = null;
+    req.tokenUserId = null;
+  } finally {
+    next();
+  }
+};
 const errorHandler = (error, req, res, next) => {
   logger.error(error.message);
 
@@ -48,4 +74,5 @@ module.exports = {
   unknownEndpoint,
   errorHandler,
   tokenExtractor,
+  userExtractor,
 };
