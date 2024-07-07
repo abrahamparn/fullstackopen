@@ -29,18 +29,17 @@ blogRouter.post("/", async (request, response, next) => {
   try {
     const { title, author, url, likes, userId } = request.body;
 
-    const decodedToken = jwt.verify(request.token, process.env.SECRET);
-    if (!decodedToken) {
-      return response.status(401).json({ error: "Invalid Token" });
-    }
-
+    let tokenUserId = request.tokenUserId; //The one whosets the request.userId is userExtractor middleware
     const user = await User.findById(userId);
 
     if (!title || !url) {
       return response.status(400).json({ error: "title and url are required" });
     }
+    if (!tokenUserId) {
+      return response.status(401).json({ error: "Invalid Token" });
+    }
     if (!user) {
-      return response.status(400).json({ error: "User id is not included" });
+      return response.status(400).json({ error: "Missing userId" });
     }
 
     const blog = new Blog({
@@ -67,10 +66,14 @@ blogRouter.delete("/:id", async (request, response, next) => {
     let tokenUserId = request.tokenUserId; //The one whosets the request.userId is userExtractor middleware
     let userExists = await User.findById(tokenUserId);
 
+    if (!userExists) {
+      return response.status(401).json({ error: "Invalid Token" });
+    }
+
     const result = await Blog.findById(request.params.id);
 
     if (!result) {
-      return response.status(400).json({ message: "The blog does not exist" });
+      return response.status(400).json({ error: "The blog does not exist" });
     }
 
     if (userExists.id.toString() !== result.user.toString()) {
