@@ -1,0 +1,17 @@
+### SUCCESS JWT
+POST http://localhost:3003/api/login
+Content-Type: application/json
+
+{
+    "username":"abrahamparn",
+    "password":"secret"
+}
+
+### WRONG PASSWORD
+POST http://localhost:3003/api/login
+Content-Type: application/json
+
+{
+    "username":"abrahamparn",
+    "password":"fail"
+}
