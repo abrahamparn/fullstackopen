@@ -1,0 +1,55 @@
+GET http://localhost:3001/api/notes
+###
+
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+
+{
+    "content": "Harus di cek ulang ini mah",
+    "important": true,
+    "userId":"6683b4e48e97bdae7204e98b"
+}
+
+### Get Token First
+# @name login
+POST http://localhost:3001/api/login
+Content-Type: application/json
+
+{
+    "username":"abrahamparn",
+    "password":"secret"
+}
+
+###
+
+@access_token = {{login.response.body.token}}
+# @name notesId
+
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+    "content": "Nambah lagi ini mah",
+    "important": true,
+    "userId":"6683b4e48e97bdae7204e98b"
+}
+###
+GET http://localhost:3001/api/notes/{{notesId.response.body.id}}
+
+###
+PUT http://localhost:3001/api/notes/667b911d696b94e6017320ab
+Content-Type: application/json
+
+{
+    "content": "VS",
+    "important": false,
+    "userId":"6683b4e48e97bdae7204e98b"
+
+}
+
+### 
+DELETE http://localhost:3001/api/notes/667b9117696b94e6017320a9
+
+###
+DELETE http://localhost:3001/api/notes/asdfasdfasdf
