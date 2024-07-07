@@ -64,10 +64,29 @@ blogRouter.post("/", async (request, response, next) => {
 
 blogRouter.delete("/:id", async (request, response, next) => {
   try {
+    const decodedToken = jwt.verify(request.token, process.env.SECRET);
+    console.log(decodedToken);
+    if (!decodedToken) {
+      return response.status(401).json({ error: "Invalid Token" });
+    }
+
+    let userExists = await User.findById(decodedToken.id);
+
     const result = await Blog.findById(request.params.id);
+
     if (!result) {
       return response.status(400).json({ message: "The blog does not exist" });
     }
+    console.log("userExists.id.toString(): ", userExists.id.toString());
+    console.log("result.user.id.toString():", result.user.id.toString());
+    console.log("result", result);
+
+    if (userExists.id.toString() !== result.user.toString()) {
+      return response.status(403).json({
+        error: "Only the creator can delete this blog",
+      });
+    }
+
     await Blog.findByIdAndDelete(request.params.id);
     response.status(200).json(result).end();
   } catch (exception) {
