@@ -2,13 +2,18 @@ import { useState, useEffect } from "react";
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
-
+import Notification from "./components/Notification";
 const App = () => {
   const [blogs, setBlogs] = useState([]);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
+  // THIS IF FOR BLOG
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
+  const [url, setUrl] = useState("");
+  const [likes, setLikes] = useState("");
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -24,6 +29,28 @@ const App = () => {
   };
 
   useEffect(hookUserStorage, []);
+  const handleCreateNewBlog = async (event) => {
+    event.preventDefault();
+    console.log("user", user);
+    console.log("userId", user.userId);
+    const blogObject = {
+      title: title,
+      author: author,
+      url: url,
+      likes: likes,
+      userId: user.userId,
+    };
+    try {
+      let createdNewBlog = await blogService.create(blogObject);
+      setBlogs(blogs.concat(createdNewBlog));
+      setLikes("");
+      setUrl("");
+      setAuthor("");
+      setTitle("");
+    } catch (exception) {
+      console.log("failure in creating blog", exception);
+    }
+  };
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -51,6 +78,7 @@ const App = () => {
     setPassword("");
     console.log("Logged out", user);
   };
+
   const loginForm = () => (
     <form onSubmit={handleLogin}>
       <div>
@@ -91,6 +119,45 @@ const App = () => {
     </div>
   );
 
+  const handleTitleChange = (event) => {
+    setTitle(event.target.value);
+  };
+
+  const handleAuthorChange = (event) => {
+    setAuthor(event.target.value);
+  };
+
+  const handleUrlChange = (event) => {
+    setUrl(event.target.value);
+  };
+
+  const handleLikesChange = (event) => {
+    setLikes(event.target.value);
+  };
+
+  const blogForm = () => (
+    <form onSubmit={handleCreateNewBlog}>
+      <h2>Create New Blog</h2>
+      <div>
+        Title: <input type="text" value={title} onChange={handleTitleChange} />
+      </div>
+      <div>
+        Author:{" "}
+        <input type="text" value={author} onChange={handleAuthorChange} />
+      </div>
+      <div>
+        Url: <input type="text" value={url} onChange={handleUrlChange} />
+      </div>
+      <div>
+        Likes:{" "}
+        <input type="number" value={likes} onChange={handleLikesChange} />
+      </div>
+      <div>
+        <button>SAVE BLOG</button>
+      </div>
+    </form>
+  );
+
   return (
     <div>
       {user === null ? (
@@ -98,8 +165,10 @@ const App = () => {
       ) : (
         <div>
           <p>{user.username}</p>
-          {logoutForm()}
 
+          {logoutForm()}
+          <br />
+          {blogForm()}
           {blogList()}
         </div>
       )}
