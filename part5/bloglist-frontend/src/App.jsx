@@ -14,6 +14,17 @@ const App = () => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
   }, []);
 
+  const hookUserStorage = () => {
+    const loggedUserJSON = window.localStorage.getItem("loggedBlogAppUser");
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON);
+      setUser(user);
+      blogService.setToken(user.token);
+    }
+  };
+
+  useEffect(hookUserStorage, []);
+
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
@@ -21,9 +32,9 @@ const App = () => {
         username,
         password,
       });
-
       blogService.setToken(user.token);
       setUser(user);
+      window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
       setUsername("");
       setPassword("");
       console.log("logged in", user);
@@ -32,6 +43,14 @@ const App = () => {
     }
   };
 
+  const handleLogout = (event) => {
+    event.preventDefault();
+    setUser(null);
+    window.localStorage.clear();
+    setUsername("");
+    setPassword("");
+    console.log("Logged out", user);
+  };
   const loginForm = () => (
     <form onSubmit={handleLogin}>
       <div>
@@ -57,6 +76,12 @@ const App = () => {
       </div>
     </form>
   );
+
+  const logoutForm = () => (
+    <form onSubmit={handleLogout}>
+      <button type="submit">LOGOUT</button>
+    </form>
+  );
   const blogList = () => (
     <div>
       <h2>blogs</h2>
@@ -65,6 +90,7 @@ const App = () => {
       ))}
     </div>
   );
+
   return (
     <div>
       {user === null ? (
@@ -72,6 +98,8 @@ const App = () => {
       ) : (
         <div>
           <p>{user.username}</p>
+          {logoutForm()}
+
           {blogList()}
         </div>
       )}
