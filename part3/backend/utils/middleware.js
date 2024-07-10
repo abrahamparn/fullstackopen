@@ -23,13 +23,16 @@ const errorHandler = (error, req, res, next) => {
   ) {
     return res.status(400).json({ error: "expected `username` to be unique" });
   } else if (error.name == "JsonWebTokenError") {
-    return response.status(401).json({ error: "token invalid" });
+    return res.status(401).json({ error: "token invalid" });
   } else if (error.name === "TokenExpiredError") {
-    return response.status(401).json({
+    return res.status(401).json({
       errr: "token expired",
     });
+  } else if (error.name === "MongooseError") {
+    return res.status(500).json({
+      error: "Cannot talk to database for now",
+    });
   }
-
   next(error);
 };
 

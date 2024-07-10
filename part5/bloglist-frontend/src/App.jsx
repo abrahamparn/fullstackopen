@@ -14,6 +14,9 @@ const App = () => {
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
   const [likes, setLikes] = useState("");
+  // THIS IS FOR NOTIFICAITON
+  const [message, setMessage] = useState(null);
+  const [httpStatus, setHttpStatus] = useState(null);
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -31,8 +34,7 @@ const App = () => {
   useEffect(hookUserStorage, []);
   const handleCreateNewBlog = async (event) => {
     event.preventDefault();
-    console.log("user", user);
-    console.log("userId", user.userId);
+
     const blogObject = {
       title: title,
       author: author,
@@ -47,8 +49,19 @@ const App = () => {
       setUrl("");
       setAuthor("");
       setTitle("");
+      setMessage("Successfully adding new blog");
+      setHttpStatus("success");
+      setTimeout(() => {
+        setMessage(null);
+        setHttpStatus(null);
+      }, 5000);
     } catch (exception) {
-      console.log("failure in creating blog", exception);
+      setMessage(exception.response.data.error);
+      setHttpStatus("error");
+      setTimeout(() => {
+        setMessage(null);
+        setHttpStatus(null);
+      }, 5000);
     }
   };
 
@@ -64,9 +77,21 @@ const App = () => {
       window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
       setUsername("");
       setPassword("");
-      console.log("logged in", user);
+      setMessage("Successfully logged in");
+      setHttpStatus("success");
+      setTimeout(() => {
+        setMessage(null);
+        setHttpStatus(null);
+      }, 5000);
     } catch (exception) {
-      console.log("error", exception);
+      setMessage(exception.response.data.error);
+      setPassword("");
+      setUsername("");
+      setHttpStatus("error");
+      setTimeout(() => {
+        setMessage(null);
+        setHttpStatus(null);
+      }, 5000);
     }
   };
 
@@ -76,7 +101,12 @@ const App = () => {
     window.localStorage.clear();
     setUsername("");
     setPassword("");
-    console.log("Logged out", user);
+    setMessage("Successfully logged out");
+    setHttpStatus("success");
+    setTimeout(() => {
+      setMessage(null);
+      setHttpStatus(null);
+    }, 5000);
   };
 
   const loginForm = () => (
@@ -160,6 +190,7 @@ const App = () => {
 
   return (
     <div>
+      <Notification message={message} httpStatus={httpStatus} />
       {user === null ? (
         loginForm()
       ) : (
