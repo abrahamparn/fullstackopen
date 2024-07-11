@@ -4,6 +4,7 @@ import blogService from "./services/blogs";
 import loginService from "./services/login";
 import Notification from "./components/Notification";
 import Togglable from "./components/Togglable";
+import BlogForm from "./components/BlogForm";
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const blogFormRef = useRef();
@@ -11,11 +12,7 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  // THIS IF FOR BLOG
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [url, setUrl] = useState("");
-  const [likes, setLikes] = useState("");
+
   // THIS IS FOR NOTIFICAITON
   const [message, setMessage] = useState(null);
   const [httpStatus, setHttpStatus] = useState(null);
@@ -34,24 +31,11 @@ const App = () => {
   };
 
   useEffect(hookUserStorage, []);
-  const handleCreateNewBlog = async (event) => {
-    event.preventDefault();
-
-    const blogObject = {
-      title: title,
-      author: author,
-      url: url,
-      likes: likes,
-      userId: user.userId,
-    };
+  const handleCreateNewBlog = async (blogObject) => {
     blogFormRef.current.toggleVisibility();
     try {
       let createdNewBlog = await blogService.create(blogObject);
       setBlogs(blogs.concat(createdNewBlog));
-      setLikes("");
-      setUrl("");
-      setAuthor("");
-      setTitle("");
       setMessage("Successfully adding new blog");
       setHttpStatus("success");
       setTimeout(() => {
@@ -59,6 +43,7 @@ const App = () => {
         setHttpStatus(null);
       }, 5000);
     } catch (exception) {
+      console.log(exception);
       setMessage(exception.response.data.error);
       setHttpStatus("error");
       setTimeout(() => {
@@ -152,45 +137,6 @@ const App = () => {
     </div>
   );
 
-  const handleTitleChange = (event) => {
-    setTitle(event.target.value);
-  };
-
-  const handleAuthorChange = (event) => {
-    setAuthor(event.target.value);
-  };
-
-  const handleUrlChange = (event) => {
-    setUrl(event.target.value);
-  };
-
-  const handleLikesChange = (event) => {
-    setLikes(event.target.value);
-  };
-
-  const blogForm = () => (
-    <form onSubmit={handleCreateNewBlog}>
-      <h2>Create New Blog</h2>
-      <div>
-        Title: <input type="text" value={title} onChange={handleTitleChange} />
-      </div>
-      <div>
-        Author:{" "}
-        <input type="text" value={author} onChange={handleAuthorChange} />
-      </div>
-      <div>
-        Url: <input type="text" value={url} onChange={handleUrlChange} />
-      </div>
-      <div>
-        Likes:{" "}
-        <input type="number" value={likes} onChange={handleLikesChange} />
-      </div>
-      <div>
-        <button>SAVE BLOG</button>
-      </div>
-    </form>
-  );
-
   return (
     <div>
       <Notification message={message} httpStatus={httpStatus} />
@@ -203,7 +149,7 @@ const App = () => {
           {logoutForm()}
           <br />
           <Togglable buttonLabel="Add New Blog" ref={blogFormRef}>
-            {blogForm()}
+            <BlogForm createBlog={handleCreateNewBlog} userId={user.userId} />
           </Togglable>
           {blogList()}
         </div>
