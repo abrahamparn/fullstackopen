@@ -18,7 +18,23 @@ const App = () => {
   const [httpStatus, setHttpStatus] = useState(null);
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
+    const fetchBlogs = async () => {
+      try {
+        let response = await blogService.getAll();
+        console.log(response);
+        response.sort((a, b) => Number(b.likes) - Number(a.likes));
+        setBlogs(response);
+      } catch (exception) {
+        setMessage("Cannot set Blog at the moment");
+        setHttpStatus("error");
+        setTimeout(() => {
+          setMessage(null);
+          setHttpStatus(null);
+        }, 5000);
+      }
+    };
+
+    fetchBlogs();
   }, []);
 
   const hookUserStorage = () => {
