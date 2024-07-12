@@ -1,6 +1,6 @@
 import { useState } from "react";
 import blogService from "../services/blogs";
-const Blog = ({ blog }) => {
+const Blog = ({ blog, handleDeleteBlog }) => {
   const [visible, setVisible] = useState(false);
   const [title, setTitle] = useState(blog.title);
   const [author, setAuthor] = useState(blog.author);
@@ -57,6 +57,7 @@ const Blog = ({ blog }) => {
             <br />
             {username}
           </div>
+          <button onClick={() => handleDeleteBlog(blog.id)}>Delete Blog</button>
         </>
       ) : (
         <></>

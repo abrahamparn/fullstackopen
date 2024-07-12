@@ -144,11 +144,38 @@ const App = () => {
       <button type="submit">LOGOUT</button>
     </form>
   );
+
+  const handleDeleteBlog = async (id) => {
+    console.log("tyring", "trying");
+    if (!confirm("Are you sure you want to delete this?")) {
+      return;
+    }
+
+    try {
+      let response = await blogService.doDelete(id);
+      console.log(response);
+      setBlogs(blogs.filter((blog) => blog.id !== id));
+      setMessage("Successfully deleted blog");
+      setHttpStatus("success");
+      setTimeout(() => {
+        setMessage(null);
+        setHttpStatus(null);
+      }, 5000);
+    } catch (exception) {
+      setMessage("Fail in deleting new blog");
+      setHttpStatus("error");
+      setTimeout(() => {
+        setMessage(null);
+        setHttpStatus(null);
+      }, 5000);
+    }
+  };
+
   const blogList = () => (
     <div>
       <h2>blogs</h2>
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} handleDeleteBlog={handleDeleteBlog} />
       ))}
     </div>
   );

@@ -31,4 +31,14 @@ const put = async (newObject) => {
   );
   return response.data;
 };
-export default { getAll, setToken, create, put };
+
+const doDelete = async (id) => {
+  const config = {
+    headers: { Authorization: token },
+  };
+  const response = await axios.delete(baseUrl + "/" + id, config);
+
+  return response.data;
+};
+
+export default { getAll, setToken, create, put, doDelete };
