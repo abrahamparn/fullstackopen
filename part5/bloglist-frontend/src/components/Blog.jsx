@@ -17,7 +17,7 @@ const Blog = ({ blog, handleDeleteBlog, theCurrentUserId }) => {
     setVisible(!visible);
   };
 
-  const hadleAddLike = async (event) => {
+  const handleAddLike = async (event) => {
     event.preventDefault();
     let editBlog = {
       title: title,
@@ -55,7 +55,7 @@ const Blog = ({ blog, handleDeleteBlog, theCurrentUserId }) => {
           <div>
             {url}
             <br />
-            {likes} <button onClick={hadleAddLike}>Like</button>
+            {likes} <button onClick={handleAddLike}>Like</button>
             <br />
             {username}
           </div>

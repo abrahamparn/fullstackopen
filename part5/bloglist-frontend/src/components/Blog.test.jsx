@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Blog from "./Blog";
+import blogService from "../services/blogs";
 
 describe("<Blog />", () => {
   test("Renders blog content", () => {
@@ -64,5 +65,39 @@ describe("<Blog />", () => {
 
     const url = screen.queryByText(`${blog.url}`);
     expect(url).toBeDefined();
+  });
+
+  test("like button is clicked twice, event handler is called twice", async () => {
+    const blog = {
+      title: "Testing blog component",
+      author: "abrahaminaja",
+      url: "http://blog.testing.app",
+      likes: 420,
+      user: {
+        username: "testuser",
+        id: "668e085f0bd8aadb03daf305",
+      },
+      id: "668e2aeef6de5cbf1cad7949",
+    };
+
+    // Mock the put method
+    const mockPut = vi.spyOn(blogService, "put").mockResolvedValue({
+      ...blog,
+      likes: blog.likes + 1,
+    });
+
+    render(<Blog blog={blog} />);
+
+    // Click the "View Detail" button to show the like button
+    const viewButton = screen.getByText("View Detail");
+    await userEvent.click(viewButton);
+
+    // Click the like button twice
+    const likeButton = screen.getByText("Like");
+    await userEvent.click(likeButton);
+    await userEvent.click(likeButton);
+
+    // Ensure the mock handler was called twice
+    expect(mockPut).toHaveBeenCalledTimes(2);
   });
 });
