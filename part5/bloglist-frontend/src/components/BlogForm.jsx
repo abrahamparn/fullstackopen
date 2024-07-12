@@ -44,18 +44,39 @@ export default function BlogForm({ createBlog, userId }) {
       <form onSubmit={addBlog}>
         <div>
           Title:{" "}
-          <input type="text" value={title} onChange={handleTitleChange} />
+          <input
+            type="text"
+            value={title}
+            onChange={handleTitleChange}
+            placeholder="a new title..."
+          />
         </div>
         <div>
           Author:{" "}
-          <input type="text" value={author} onChange={handleAuthorChange} />
+          <input
+            type="text"
+            value={author}
+            onChange={handleAuthorChange}
+            placeholder="abraham"
+          />
         </div>
         <div>
-          Url: <input type="text" value={url} onChange={handleUrlChange} />
+          Url:{" "}
+          <input
+            type="text"
+            value={url}
+            onChange={handleUrlChange}
+            placeholder="http://abrahamnaibrohu"
+          />
         </div>
         <div>
           Likes:{" "}
-          <input type="number" value={likes} onChange={handleLikesChange} />
+          <input
+            type="number"
+            value={likes}
+            onChange={handleLikesChange}
+            placeholder="a number"
+          />
         </div>
         <div>
           <button>SAVE BLOG</button>

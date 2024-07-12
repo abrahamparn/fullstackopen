@@ -16,8 +16,6 @@ describe("<Blog />", () => {
 
     render(<Blog blog={blog} />);
 
-    screen.debug();
-
     const element = screen.getByText(`${blog.title} ${blog.author}`);
 
     expect(element).toBeDefined();
