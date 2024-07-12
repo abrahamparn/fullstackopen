@@ -1,5 +1,5 @@
 import React from "react";
-
+import PropTypes from "prop-types";
 const Notification = ({ message, httpStatus }) => {
   if (httpStatus === null) {
     return null;
@@ -17,4 +17,5 @@ const Notification = ({ message, httpStatus }) => {
 
   return <div style={notificationStyle}>{message}</div>;
 };
+
 export default Notification;

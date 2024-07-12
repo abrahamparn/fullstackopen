@@ -91,7 +91,9 @@ blogRouter.delete("/:id", async (request, response, next) => {
 
 blogRouter.put("/:id", async (request, response, next) => {
   try {
-    if (!request.title || !request.url) {
+    const { title, author, url, likes } = request.body;
+
+    if (!title || !url) {
       return response.status(400).json({ error: "title and url are required" });
     }
     let tokenUserId = request.tokenUserId;
@@ -99,7 +101,6 @@ blogRouter.put("/:id", async (request, response, next) => {
     if (!userExists) {
       return response.status(401).json({ error: "Invalid Token" });
     }
-    const { title, author, url, likes } = request.body;
 
     const result = await Blog.findById(request.params.id);
     console.log(result);
