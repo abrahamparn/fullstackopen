@@ -1,6 +1,6 @@
 import { useState } from "react";
 import blogService from "../services/blogs";
-const Blog = ({ blog, handleDeleteBlog }) => {
+const Blog = ({ blog, handleDeleteBlog, theCurrentUserId }) => {
   const [visible, setVisible] = useState(false);
   const [title, setTitle] = useState(blog.title);
   const [author, setAuthor] = useState(blog.author);
@@ -9,6 +9,8 @@ const Blog = ({ blog, handleDeleteBlog }) => {
   const [username, setUserName] = useState(blog.user.username);
   const [userId, setUserId] = useState(blog.user.id);
   const [blogId, setBlogId] = useState(blog.id);
+  const [currentUserId, setCurrentUserId] = useState(theCurrentUserId);
+  console.log({ currentUserId: currentUserId, userId: userId });
 
   const toggleVisibility = () => {
     console.log("the Visibility: ", visible);
@@ -57,7 +59,13 @@ const Blog = ({ blog, handleDeleteBlog }) => {
             <br />
             {username}
           </div>
-          <button onClick={() => handleDeleteBlog(blog.id)}>Delete Blog</button>
+          {userId === currentUserId ? (
+            <button onClick={() => handleDeleteBlog(blog.id)}>
+              Delete Blog
+            </button>
+          ) : (
+            <></>
+          )}
         </>
       ) : (
         <></>
