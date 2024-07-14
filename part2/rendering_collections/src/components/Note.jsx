@@ -3,7 +3,9 @@ const Note = ({ note, toggleImportance, deleteNotes }) => {
   return (
     <li className="note">
       {note.content}
-      <button onClick={toggleImportance}>{label}</button>
+      <button onClick={toggleImportance} data-testid="important-button">
+        {label}
+      </button>
       <button onClick={deleteNotes}>Delete id {note.id}</button>
     </li>
   );

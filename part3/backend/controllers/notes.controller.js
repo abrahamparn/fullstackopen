@@ -33,7 +33,6 @@ const getTokenFrom = (request) => {
 notesRouter.post("/", async (request, response) => {
   console.log(request.body);
   const body = request.body;
-  console.log("KONTOL");
   const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET);
   console.log("decodedToken", decodedToken);
 

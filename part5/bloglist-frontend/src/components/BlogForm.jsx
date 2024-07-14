@@ -49,6 +49,7 @@ export default function BlogForm({ createBlog, userId }) {
             value={title}
             onChange={handleTitleChange}
             placeholder="a new title..."
+            data-testid="title"
           />
         </div>
         <div>
@@ -58,6 +59,7 @@ export default function BlogForm({ createBlog, userId }) {
             value={author}
             onChange={handleAuthorChange}
             placeholder="abraham"
+            data-testid="author"
           />
         </div>
         <div>
@@ -67,6 +69,7 @@ export default function BlogForm({ createBlog, userId }) {
             value={url}
             onChange={handleUrlChange}
             placeholder="http://abrahamnaibrohu"
+            data-testid="url"
           />
         </div>
         <div>
@@ -76,6 +79,7 @@ export default function BlogForm({ createBlog, userId }) {
             value={likes}
             onChange={handleLikesChange}
             placeholder="a number"
+            data-testid="likes"
           />
         </div>
         <div>

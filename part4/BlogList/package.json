@@ -8,7 +8,8 @@
     "start": "cross-env NODE_ENV=production node index.js",
     "dev": "cross-env NODE_ENV=deevlopment nodemon index.js",
     "build:ui": "@powershell Remove-Item -Recurse -Force dist && cd ../../part2/rendering_collections && npm run build && @powershell Copy-Item dist -Recurse ../../part3/backend/",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "start:test": "cross-env NODE_ENV=test nodemon index.js"
   },
   "author": "abraham naiborhu",
   "license": "ISC",

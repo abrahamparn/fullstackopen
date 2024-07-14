@@ -5,6 +5,8 @@ const cors = require("cors");
 const notesRouter = require("./controllers/notes.controller");
 const userRouter = require("./controllers/user.controller");
 const loginRouter = require("./controllers/login.controller");
+const testRouter = require("./controllers/testing.controller");
+
 const middleware = require("./utils/middleware");
 const app = express();
 const mongoose = require("mongoose");
@@ -19,6 +21,7 @@ mongoose
     logger.info("connected to MongoDB");
   })
   .catch((error) => {
+    console.log(error);
     logger.error("error connecting to MongoDB:", error.message);
   });
 
@@ -35,6 +38,10 @@ app.get("/", (req, res) => {
 app.use("/api/notes", notesRouter);
 app.use("/api/users", userRouter);
 app.use("/api/login", loginRouter);
+if (process.env.NODE_ENV === "test") {
+  console.log("connected to dbs");
+  app.use("/api/testing", testRouter);
+}
 
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
