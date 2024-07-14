@@ -120,10 +120,7 @@ describe("Blog app tests", () => {
       ).not.toBeVisible();
     });
 
-    test.only("only the user can delete the note", async ({
-      page,
-      request,
-    }) => {
+    test("only the user can delete the note", async ({ page, request }) => {
       await page.getByRole("button", { name: "LOGOUT" }).click();
       await page.goto("http://localhost:5173");
       await request.post("http://localhost:5173/api/users", {
@@ -134,6 +131,8 @@ describe("Blog app tests", () => {
         },
       });
       await loginWith(page, "second", "second");
+      await page.getByText("second").waitFor();
+
       await page.goto("http://localhost:5173");
       await page
         .getByText("test sample tester account")
@@ -142,6 +141,48 @@ describe("Blog app tests", () => {
       await expect(
         page.getByRole("button", { name: "Delete Blog" })
       ).not.toBeVisible();
+    });
+
+    test("blog is arranged in the order of likes", async ({ page }) => {
+      // Create the second blog
+      await createBlog(
+        page,
+        "second sample",
+        "tester account",
+        "http://tester.agent.com",
+        "70"
+      );
+
+      // Create the third blog
+      await createBlog(
+        page,
+        "third sample",
+        "tester account",
+        "http://tester.agent.com",
+        "71"
+      );
+
+      // Navigate to the blog page
+      await page.goto("http://localhost:5173");
+
+      // Assert that the blogs are arranged in the order of likes
+      const blogItems = page.locator(".blogItem"); // Assuming the class name for blog items is 'blogItem'
+
+      // Check the first blog item
+      await expect(
+        blogItems.nth(0).getByText("third sample tester account")
+      ).toBeVisible();
+
+      // Check the second blog item
+      await expect(
+        blogItems.nth(1).getByText("second sample tester account")
+      ).toBeVisible();
+
+      // Add additional checks if needed for more blogs
+      // Check the second blog item
+      await expect(
+        blogItems.nth(2).getByText("test sample tester account")
+      ).toBeVisible();
     });
   });
 });
