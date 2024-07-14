@@ -102,7 +102,7 @@ describe("Blog app tests", () => {
       await expect(oldNumber).not.toBe(newNumber);
     });
 
-    test.only("the newly added blog, can be deleted", async ({ page }) => {
+    test("the newly added blog, can be deleted", async ({ page }) => {
       await page.goto("http://localhost:5173");
       await page
         .getByText("test sample tester account")
@@ -117,6 +117,30 @@ describe("Blog app tests", () => {
 
       await expect(
         page.getByText("test sample tester account")
+      ).not.toBeVisible();
+    });
+
+    test.only("only the user can delete the note", async ({
+      page,
+      request,
+    }) => {
+      await page.getByRole("button", { name: "LOGOUT" }).click();
+      await page.goto("http://localhost:5173");
+      await request.post("http://localhost:5173/api/users", {
+        data: {
+          name: "second tester agent",
+          username: "second",
+          password: "second",
+        },
+      });
+      await loginWith(page, "second", "second");
+      await page.goto("http://localhost:5173");
+      await page
+        .getByText("test sample tester account")
+        .getByRole("button", { name: "View Detail" })
+        .click();
+      await expect(
+        page.getByRole("button", { name: "Delete Blog" })
       ).not.toBeVisible();
     });
   });
