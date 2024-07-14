@@ -89,7 +89,7 @@ describe("Blog app tests", () => {
         "69"
       );
     });
-    test.only("the newly created blog, could beliked", async ({ page }) => {
+    test("the newly created blog, could beliked", async ({ page }) => {
       await page
         .getByText("test sample tester account")
         .getByRole("button", { name: "View Detail" })
@@ -100,6 +100,24 @@ describe("Blog app tests", () => {
       let newNumber = await page.getByTestId("likes").textContent();
       await page.getByText("70").waitFor();
       await expect(oldNumber).not.toBe(newNumber);
+    });
+
+    test.only("the newly added blog, can be deleted", async ({ page }) => {
+      await page.goto("http://localhost:5173");
+      await page
+        .getByText("test sample tester account")
+        .getByRole("button", { name: "View Detail" })
+        .click();
+      page.on("dialog", (dialog) => dialog.accept());
+
+      await page.getByRole("button", { name: "Delete Blog" }).click();
+
+      // There should be a window.confirm, how to click okay?
+      await page.goto("http://localhost:5173");
+
+      await expect(
+        page.getByText("test sample tester account")
+      ).not.toBeVisible();
     });
   });
 });
