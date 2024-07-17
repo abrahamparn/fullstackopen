@@ -7,6 +7,7 @@ const App = () => {
   const vote = (id) => {
     dispatch(addVote(id));
   };
+
   const handleAddAnectdote = (event) => {
     event.preventDefault();
     const content = event.target.anectdote.value;
