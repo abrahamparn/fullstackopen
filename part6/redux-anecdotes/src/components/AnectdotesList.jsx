@@ -20,7 +20,14 @@ const Anecdotes = () => {
     dispatch(addVote(id));
   };
   const dispatch = useDispatch();
-  const anectdote = useSelector((state) => state);
+  const anectdote = useSelector(({ anecdotes, filter }) => {
+    if (filter !== "ALL") {
+      return anecdotes.filter((n) =>
+        n.content.toLowerCase().includes(filter.toLowerCase())
+      );
+    }
+    return anecdotes;
+  });
   const sortedAnecdotes = [...anectdote].sort(
     (a, b) => Number(b.votes) - Number(a.votes)
   );
