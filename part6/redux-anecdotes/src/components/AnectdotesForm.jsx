@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { addVote, addAnectdote } from "../reducers/anecdoteReducer";
-import { notificationChange } from "../reducers/notificationReducer";
+import { setNotification } from "../reducers/notificationReducer";
 import anecdoteService from "../../service/anecdote";
 export default function AnectdotesForm() {
   const dispatch = useDispatch();
@@ -13,8 +13,7 @@ export default function AnectdotesForm() {
       const result = await anecdoteService.createNewAnecdote(content);
       dispatch(addAnectdote(content));
       event.target.anectdote.value = "";
-      dispatch(notificationChange(`successfully adding "${content}"`));
-      setTimeout(notificationChange(null), 5000);
+      dispatch(setNotification(`successfully adding "${content}"`, 3000));
     } catch (exception) {
       console.error("hohoho");
     }

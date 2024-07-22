@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import anecdoteService from "../../service/anecdote";
 
 import { setNewVote } from "../reducers/anecdoteReducer";
-import { notificationChange } from "../reducers/notificationReducer";
+import { setNotification } from "../reducers/notificationReducer";
 const Anectdote = ({ anectdote, handleOnClick }) => {
   return (
     <div key={anectdote.id}>
@@ -23,11 +23,7 @@ const Anecdotes = () => {
 
   const vote = async (id, content) => {
     dispatch(await setNewVote(id));
-    dispatch(notificationChange(`${content} has been voted`));
-    console.log(id);
-    setTimeout(() => {
-      dispatch(notificationChange(null));
-    }, 5000);
+    dispatch(setNotification(`${content} has been voted`, 2000));
   };
   const anectdote = useSelector(({ anecdotes, filter }) => {
     if (filter !== "ALL") {

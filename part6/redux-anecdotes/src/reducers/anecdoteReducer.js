@@ -36,7 +36,6 @@ const anecdoteSlice = createSlice({
         anecdote.id !== id ? anecdote : changedAnecdote
       );
     },
-
     setAnecdotes(state, action) {
       return action.payload;
     },
@@ -68,4 +67,5 @@ export const setNewVote = (id) => {
     dispatch(addVote(newVote.id));
   };
 };
+
 export default anecdoteSlice.reducer;
