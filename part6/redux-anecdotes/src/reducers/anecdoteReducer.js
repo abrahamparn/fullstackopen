@@ -61,4 +61,11 @@ export const addAnectdote = (content) => {
     dispatch(appendAnecdote(newAnecdote));
   };
 };
+
+export const setNewVote = (id) => {
+  return async (dispatch) => {
+    const newVote = await anecdoteService.incraeseVoteNumber(id);
+    dispatch(addVote(newVote.id));
+  };
+};
 export default anecdoteSlice.reducer;

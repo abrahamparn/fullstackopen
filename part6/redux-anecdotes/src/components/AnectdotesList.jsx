@@ -1,7 +1,8 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
+import anecdoteService from "../../service/anecdote";
 
-import { addVote, addAnectdote } from "../reducers/anecdoteReducer";
+import { setNewVote } from "../reducers/anecdoteReducer";
 import { notificationChange } from "../reducers/notificationReducer";
 const Anectdote = ({ anectdote, handleOnClick }) => {
   return (
@@ -20,9 +21,10 @@ const Anectdote = ({ anectdote, handleOnClick }) => {
 const Anecdotes = () => {
   const dispatch = useDispatch();
 
-  const vote = (id, content) => {
-    dispatch(addVote(id));
+  const vote = async (id, content) => {
+    dispatch(await setNewVote(id));
     dispatch(notificationChange(`${content} has been voted`));
+    console.log(id);
     setTimeout(() => {
       dispatch(notificationChange(null));
     }, 5000);
