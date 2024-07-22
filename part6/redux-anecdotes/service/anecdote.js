@@ -11,4 +11,17 @@ const getAll = async () => {
   }
 };
 
-export default { getAll };
+const createNewAnecdote = async (content) => {
+  try {
+    const object = {
+      content,
+      votes: 0,
+    };
+    const response = await axios.post(baseUrl, object);
+    return response.data;
+  } catch (exception) {
+    console.error("error in createNewAnecdote", exception);
+  }
+};
+
+export default { getAll, createNewAnecdote };
