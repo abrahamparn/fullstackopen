@@ -15,6 +15,7 @@ const App = () => {
     refetchOnWindowFocus: false,
     retry: 2,
   });
+
   console.log(result.data);
   const anecdotes = result.data;
   if (result.isLoading) {
