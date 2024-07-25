@@ -20,14 +20,25 @@ const AnecdoteForm = () => {
     mutationFn: createAnecdote,
     onSuccess: (newAnecdote) => {
       console.log("hai");
-      const anecdote = queryClient.invalidateQueries({
+
+      // Invalidate queries to trigger a refetch
+      queryClient.invalidateQueries({
         queryKey: ["anecdotes"],
       });
-      console.log(anecdote);
-      queryClient.setQueryData(
-        { queryKey: ["anecdotes"] },
-        anecdote.concat(newAnecdote)
-      );
+
+      // Get the current data for the anecdotes query
+      const anecdote = queryClient.getQueryData({ queryKey: ["anecdotes"] });
+
+      if (Array.isArray(anecdote)) {
+        queryClient.setQueryData(
+          { queryKey: ["anecdotes"] },
+          anecdote.concat(newAnecdote)
+        );
+      }
+    },
+    onError: (error) => {
+      console.log(error);
+      setNotification(`${error.message}`);
     },
   });
 
