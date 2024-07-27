@@ -41,20 +41,6 @@ const Anecdote = ({ anecdote }) => {
     </div>
   );
 };
-const Content = ({ anecdotes, addNew, anecdote }) => {
-  return (
-    <Routes>
-      <Route
-        path="/anecdote/:id"
-        element={<Anecdote anecdote={anecdote} />}
-      ></Route>
-      <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
-
-      <Route path="/create" element={<CreateNew addNew={addNew} />} />
-      <Route path="/about" element={<About />} />
-    </Routes>
-  );
-};
 
 const AnecdoteList = ({ anecdotes }) => (
   <div>
@@ -151,6 +137,10 @@ const CreateNew = (props) => {
   );
 };
 
+const Notification = ({ notification }) => {
+  return <div>{notification === null ? null : <div>{notification}</div>}</div>;
+};
+
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
     {
@@ -193,10 +183,80 @@ const App = () => {
     setAnecdotes(anecdotes.map((a) => (a.id === id ? voted : a)));
   };
 
+  const CreateNew = (props) => {
+    const [content, setContent] = useState("");
+    const [author, setAuthor] = useState("");
+    const [info, setInfo] = useState("");
+
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      props.addNew({
+        content,
+        author,
+        info,
+        votes: 0,
+      });
+
+      setNotification(`${content} has been added`);
+      setTimeout(() => {
+        setNotification(null);
+      }, 5000);
+    };
+
+    return (
+      <div>
+        <h2>create a new anecdote</h2>
+        <form onSubmit={handleSubmit}>
+          <div>
+            content
+            <input
+              name="content"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+            />
+          </div>
+          <div>
+            author
+            <input
+              name="author"
+              value={author}
+              onChange={(e) => setAuthor(e.target.value)}
+            />
+          </div>
+          <div>
+            url for more info
+            <input
+              name="info"
+              value={info}
+              onChange={(e) => setInfo(e.target.value)}
+            />
+          </div>
+          <button>create</button>
+        </form>
+      </div>
+    );
+  };
+
+  const Content = ({ anecdotes, addNew, anecdote }) => {
+    return (
+      <Routes>
+        <Route
+          path="/anecdote/:id"
+          element={<Anecdote anecdote={anecdote} />}
+        ></Route>
+        <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
+
+        <Route path="/create" element={<CreateNew addNew={addNew} />} />
+        <Route path="/about" element={<About />} />
+      </Routes>
+    );
+  };
+
   return (
     <div>
       <h1>Software anecdotes</h1>
       <Menu />
+      <Notification notification={notification} />
       <Content anecdotes={anecdotes} addNew={addNew} anecdote={anecdote} />
       <Footer />
     </div>
