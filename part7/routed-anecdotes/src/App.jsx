@@ -29,9 +29,25 @@ const Menu = () => {
   );
 };
 
-const Content = ({ anecdotes, addNew }) => {
+const Anecdote = ({ anecdote }) => {
+  return (
+    <div>
+      <h2>No. {anecdote.id}</h2>
+      <h3>{anecdote.content}</h3>
+      <h4>
+        {anecdote.author} || {anecdote.info}
+      </h4>
+      <h4>This has: {anecdote.votes} votes</h4>
+    </div>
+  );
+};
+const Content = ({ anecdotes, addNew, anecdote }) => {
   return (
     <Routes>
+      <Route
+        path="/anecdote/:id"
+        element={<Anecdote anecdote={anecdote} />}
+      ></Route>
       <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
 
       <Route path="/create" element={<CreateNew addNew={addNew} />} />
@@ -45,7 +61,9 @@ const AnecdoteList = ({ anecdotes }) => (
     <h2>Anecdotes</h2>
     <ul>
       {anecdotes.map((anecdote) => (
-        <li key={anecdote.id}>{anecdote.content}</li>
+        <li key={anecdote.id}>
+          <Link to={`/anecdote/${anecdote.id}`}>{anecdote.content}</Link>
+        </li>
       ))}
     </ul>
   </div>
@@ -153,6 +171,10 @@ const App = () => {
 
   const [notification, setNotification] = useState("");
 
+  const match = useMatch("/anecdote/:id");
+  const anecdote = match
+    ? anecdotes.find((note) => note.id === Number(match.params.id))
+    : null;
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000);
     setAnecdotes(anecdotes.concat(anecdote));
@@ -175,7 +197,7 @@ const App = () => {
     <div>
       <h1>Software anecdotes</h1>
       <Menu />
-      <Content anecdotes={anecdotes} addNew={addNew} />
+      <Content anecdotes={anecdotes} addNew={addNew} anecdote={anecdote} />
       <Footer />
     </div>
   );
