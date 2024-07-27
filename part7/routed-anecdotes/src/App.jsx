@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { setNotification } from "../redux/reducers/notificationReducers";
+import { useSelector, useDispatch } from "react-redux";
+
 import {
   BrowserRouter as Router,
   Routes,
@@ -89,6 +92,7 @@ const Footer = () => (
 );
 
 const CreateNew = (props) => {
+  const dispatch = useDispatch();
   const [content, setContent] = useState("");
   const [author, setAuthor] = useState("");
   const [info, setInfo] = useState("");
@@ -101,6 +105,7 @@ const CreateNew = (props) => {
       info,
       votes: 0,
     });
+    dispatch(setNotification(`successfully adding "${content}"`, 5000));
   };
 
   return (
@@ -137,8 +142,26 @@ const CreateNew = (props) => {
   );
 };
 
-const Notification = ({ notification }) => {
+const Notification = () => {
+  const notification = useSelector((state) => {
+    return state.notification;
+  });
   return <div>{notification === null ? null : <div>{notification}</div>}</div>;
+};
+
+const Content = ({ anecdotes, addNew, anecdote }) => {
+  return (
+    <Routes>
+      <Route
+        path="/anecdote/:id"
+        element={<Anecdote anecdote={anecdote} />}
+      ></Route>
+      <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
+
+      <Route path="/create" element={<CreateNew addNew={addNew} />} />
+      <Route path="/about" element={<About />} />
+    </Routes>
+  );
 };
 
 const App = () => {
@@ -158,8 +181,6 @@ const App = () => {
       id: 2,
     },
   ]);
-
-  const [notification, setNotification] = useState("");
 
   const match = useMatch("/anecdote/:id");
   const anecdote = match
@@ -183,80 +204,11 @@ const App = () => {
     setAnecdotes(anecdotes.map((a) => (a.id === id ? voted : a)));
   };
 
-  const CreateNew = (props) => {
-    const [content, setContent] = useState("");
-    const [author, setAuthor] = useState("");
-    const [info, setInfo] = useState("");
-
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      props.addNew({
-        content,
-        author,
-        info,
-        votes: 0,
-      });
-
-      setNotification(`${content} has been added`);
-      setTimeout(() => {
-        setNotification(null);
-      }, 5000);
-    };
-
-    return (
-      <div>
-        <h2>create a new anecdote</h2>
-        <form onSubmit={handleSubmit}>
-          <div>
-            content
-            <input
-              name="content"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-            />
-          </div>
-          <div>
-            author
-            <input
-              name="author"
-              value={author}
-              onChange={(e) => setAuthor(e.target.value)}
-            />
-          </div>
-          <div>
-            url for more info
-            <input
-              name="info"
-              value={info}
-              onChange={(e) => setInfo(e.target.value)}
-            />
-          </div>
-          <button>create</button>
-        </form>
-      </div>
-    );
-  };
-
-  const Content = ({ anecdotes, addNew, anecdote }) => {
-    return (
-      <Routes>
-        <Route
-          path="/anecdote/:id"
-          element={<Anecdote anecdote={anecdote} />}
-        ></Route>
-        <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
-
-        <Route path="/create" element={<CreateNew addNew={addNew} />} />
-        <Route path="/about" element={<About />} />
-      </Routes>
-    );
-  };
-
   return (
     <div>
       <h1>Software anecdotes</h1>
       <Menu />
-      <Notification notification={notification} />
+      <Notification />
       <Content anecdotes={anecdotes} addNew={addNew} anecdote={anecdote} />
       <Footer />
     </div>
