@@ -91,21 +91,28 @@ const Footer = () => (
   </div>
 );
 
+import useField from "./hooks/useField";
+
 const CreateNew = (props) => {
   const dispatch = useDispatch();
-  const [content, setContent] = useState("");
-  const [author, setAuthor] = useState("");
-  const [info, setInfo] = useState("");
+  const content = useField("content");
+  const author = useField("author");
+  const info = useField("info");
 
   const handleSubmit = (e) => {
     e.preventDefault();
     props.addNew({
-      content,
-      author,
-      info,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0,
     });
-    dispatch(setNotification(`successfully adding "${content}"`, 5000));
+    dispatch(setNotification(`successfully adding "${content.value}"`, 5000));
+
+    // Resetting the form fields after submission
+    content.reset("");
+    author.reset("");
+    info.reset("");
   };
 
   return (
@@ -115,26 +122,22 @@ const CreateNew = (props) => {
         <div>
           content
           <input
-            name="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
+            name={content.name}
+            value={content.value}
+            onChange={content.onChange}
           />
         </div>
         <div>
           author
           <input
-            name="author"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
+            name={author.name}
+            value={author.value}
+            onChange={author.onChange}
           />
         </div>
         <div>
           url for more info
-          <input
-            name="info"
-            value={info}
-            onChange={(e) => setInfo(e.target.value)}
-          />
+          <input name={info.name} value={info.value} onChange={info.onChange} />
         </div>
         <button>create</button>
       </form>
