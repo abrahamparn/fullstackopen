@@ -1,12 +1,15 @@
 import React from "react";
-import PropTypes from "prop-types";
-const Notification = ({ message, httpStatus }) => {
-  if (httpStatus === null) {
+import { useSelector, useDispatch } from "react-redux";
+const Notification = () => {
+  const notification = useSelector((state) => {
+    return state.notification;
+  });
+  if (notification.httpStatus === null) {
     return null;
   }
 
   const notificationStyle = {
-    color: httpStatus === "error" ? "red" : "green",
+    color: notification.httpStatus === "error" ? "red" : "green",
     background: "lightgrey",
     fontSize: "20px",
     borderStyle: "solid",
@@ -17,7 +20,7 @@ const Notification = ({ message, httpStatus }) => {
 
   return (
     <div style={notificationStyle} data-testid="notification">
-      {message}
+      {notification.message}
     </div>
   );
 };

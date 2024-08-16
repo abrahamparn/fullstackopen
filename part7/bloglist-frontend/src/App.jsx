@@ -5,17 +5,19 @@ import loginService from "./services/login";
 import Notification from "./components/Notification";
 import Togglable from "./components/Togglable";
 import BlogForm from "./components/BlogForm";
+import { setNotification } from "./reducer/notificationReducer";
+import { useSelector, useDispatch } from "react-redux";
+
 const App = () => {
+  //DISPATCH
+  const dispatch = useDispatch();
+
   const [blogs, setBlogs] = useState([]);
   const blogFormRef = useRef();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-
-  // THIS IS FOR NOTIFICAITON
-  const [message, setMessage] = useState(null);
-  const [httpStatus, setHttpStatus] = useState(null);
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -25,12 +27,9 @@ const App = () => {
         response.sort((a, b) => Number(b.likes) - Number(a.likes));
         setBlogs(response);
       } catch (exception) {
-        setMessage("Cannot set Blog at the moment");
-        setHttpStatus("error");
-        setTimeout(() => {
-          setMessage(null);
-          setHttpStatus(null);
-        }, 5000);
+        dispatch(
+          setNotification("Cannot set Blog at the moment", "error", 5000)
+        );
       }
     };
 
@@ -52,20 +51,12 @@ const App = () => {
     try {
       let createdNewBlog = await blogService.create(blogObject);
       setBlogs(blogs.concat(createdNewBlog));
-      setMessage("Successfully adding new blog");
-      setHttpStatus("success");
-      setTimeout(() => {
-        setMessage(null);
-        setHttpStatus(null);
-      }, 5000);
+      dispatch(
+        setNotification("Successfully adding new blog", "success", 5000)
+      );
     } catch (exception) {
       console.log(exception);
-      setMessage(exception.response.data.error);
-      setHttpStatus("error");
-      setTimeout(() => {
-        setMessage(null);
-        setHttpStatus(null);
-      }, 5000);
+      dispatch(setNotification(exception.response.data.error, "error", 5000));
     }
   };
 
@@ -81,21 +72,12 @@ const App = () => {
       window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
       setUsername("");
       setPassword("");
-      setMessage("Successfully logged in");
-      setHttpStatus("success");
-      setTimeout(() => {
-        setMessage(null);
-        setHttpStatus(null);
-      }, 5000);
+
+      dispatch(setNotification("Successfully logged in", "success", 5000));
     } catch (exception) {
-      setMessage(exception.response.data.error);
+      dispatch(setNotification(exception.response.data.error, "error", 5000));
       setPassword("");
       setUsername("");
-      setHttpStatus("error");
-      setTimeout(() => {
-        setMessage(null);
-        setHttpStatus(null);
-      }, 5000);
     }
   };
 
@@ -105,12 +87,7 @@ const App = () => {
     window.localStorage.clear();
     setUsername("");
     setPassword("");
-    setMessage("Successfully logged out");
-    setHttpStatus("success");
-    setTimeout(() => {
-      setMessage(null);
-      setHttpStatus(null);
-    }, 5000);
+    dispatch(setNotification("Successfully logged out", "success", 5000));
   };
 
   const loginForm = () => (
@@ -157,19 +134,9 @@ const App = () => {
       let response = await blogService.doDelete(id);
       console.log(response);
       setBlogs(blogs.filter((blog) => blog.id !== id));
-      setMessage("Successfully deleted blog");
-      setHttpStatus("success");
-      setTimeout(() => {
-        setMessage(null);
-        setHttpStatus(null);
-      }, 5000);
+      dispatch(setNotification("Successfully deleted blog", "success", 5000));
     } catch (exception) {
-      setMessage("Fail in deleting new blog");
-      setHttpStatus("error");
-      setTimeout(() => {
-        setMessage(null);
-        setHttpStatus(null);
-      }, 5000);
+      dispatch(setNotification("Fail in deleting new blog", "error", 5000));
     }
   };
 
@@ -192,7 +159,7 @@ const App = () => {
 
   return (
     <div>
-      <Notification message={message} httpStatus={httpStatus} />
+      <Notification />
       {user === null ? (
         loginForm()
       ) : (
