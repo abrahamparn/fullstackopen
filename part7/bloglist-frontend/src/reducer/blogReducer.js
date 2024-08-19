@@ -12,10 +12,19 @@ const blogSlice = createSlice({
     addBlog(state, action) {
       state.push(action.payload);
     },
+    updateBlog(state, action) {
+      const updatedBlog = action.payload;
+      return state.map((blog) =>
+        blog.id !== updatedBlog.id ? blog : updatedBlog
+      );
+    },
+    deleteBlog(state, action) {
+      return state.filter((blog) => blog.id !== action.payload);
+    },
   },
 });
 
-export const { setBlogs, addBlog } = blogSlice.actions;
+export const { setBlogs, addBlog, updateBlog, deleteBlog } = blogSlice.actions;
 
 export const fetchBlogs = () => {
   return async (dispatch) => {
@@ -42,6 +51,35 @@ export const createNewBlog = (blog) => {
           "error",
           5000
         )
+      );
+    }
+  };
+};
+
+export const removeBlog = (id) => {
+  return async (dispatch) => {
+    try {
+      let response = await blogsService.doDelete(id);
+      console.log(response);
+      dispatch(deleteBlog(id));
+      dispatch(setNotification("Successfully deleted blog", "success", 5000));
+    } catch (error) {
+      dispatch(
+        setNotification("Fail in deleting: " + error.message, "error", 5000)
+      );
+    }
+  };
+};
+
+export const likeBlog = (blog) => {
+  return async (dispatch) => {
+    try {
+      const updatedBlog = { ...blog, likes: blog.likes + 1 };
+      const response = await blogsService.put(updatedBlog);
+      dispatch(updateBlog(response));
+    } catch (error) {
+      dispatch(
+        setNotification("Fail in liking: " + error.message, "error", 5000)
       );
     }
   };

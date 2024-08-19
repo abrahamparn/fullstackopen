@@ -7,7 +7,7 @@ import Togglable from "./components/Togglable";
 import BlogForm from "./components/BlogForm";
 import { setNotification } from "./reducer/notificationReducer";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchBlogs, createNewBlog } from "./reducer/blogReducer";
+import { fetchBlogs, createNewBlog, removeBlog } from "./reducer/blogReducer";
 
 const App = () => {
   //DISPATCH
@@ -36,7 +36,6 @@ const App = () => {
   useEffect(hookUserStorage, []);
   const handleCreateNewBlog = async (blogObject) => {
     blogFormRef.current.toggleVisibility();
-
     dispatch(createNewBlog(blogObject));
   };
 
@@ -109,15 +108,7 @@ const App = () => {
     if (!confirm("Are you sure you want to delete this?")) {
       return;
     }
-
-    try {
-      let response = await blogService.doDelete(id);
-      console.log(response);
-      setBlogs(blogs.filter((blog) => blog.id !== id));
-      dispatch(setNotification("Successfully deleted blog", "success", 5000));
-    } catch (exception) {
-      dispatch(setNotification("Fail in deleting new blog", "error", 5000));
-    }
+    dispatch(removeBlog(id));
   };
 
   const blogList = () => {
