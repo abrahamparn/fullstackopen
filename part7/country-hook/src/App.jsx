@@ -72,7 +72,7 @@ const App = () => {
     setName(nameInput.value);
   };
   return (
-    <div>
+    <div className="container">
       <form onSubmit={fetch}>
         <input {...nameInput} />
         <button>find</button>

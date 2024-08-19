@@ -7,12 +7,13 @@ import Togglable from "./components/Togglable";
 import BlogForm from "./components/BlogForm";
 import { setNotification } from "./reducer/notificationReducer";
 import { useSelector, useDispatch } from "react-redux";
+import { fetchBlogs, createNewBlog } from "./reducer/blogReducer";
 
 const App = () => {
   //DISPATCH
   const dispatch = useDispatch();
 
-  const [blogs, setBlogs] = useState([]);
+  const blogs = useSelector((state) => state.blogs);
   const blogFormRef = useRef();
 
   const [username, setUsername] = useState("");
@@ -20,21 +21,8 @@ const App = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const fetchBlogs = async () => {
-      try {
-        let response = await blogService.getAll();
-        console.log(response);
-        response.sort((a, b) => Number(b.likes) - Number(a.likes));
-        setBlogs(response);
-      } catch (exception) {
-        dispatch(
-          setNotification("Cannot set Blog at the moment", "error", 5000)
-        );
-      }
-    };
-
-    fetchBlogs();
-  }, []);
+    dispatch(fetchBlogs());
+  }, [dispatch]);
 
   const hookUserStorage = () => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogAppUser");
@@ -48,16 +36,8 @@ const App = () => {
   useEffect(hookUserStorage, []);
   const handleCreateNewBlog = async (blogObject) => {
     blogFormRef.current.toggleVisibility();
-    try {
-      let createdNewBlog = await blogService.create(blogObject);
-      setBlogs(blogs.concat(createdNewBlog));
-      dispatch(
-        setNotification("Successfully adding new blog", "success", 5000)
-      );
-    } catch (exception) {
-      console.log(exception);
-      dispatch(setNotification(exception.response.data.error, "error", 5000));
-    }
+
+    dispatch(createNewBlog(blogObject));
   };
 
   const handleLogin = async (event) => {
