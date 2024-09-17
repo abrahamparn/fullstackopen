@@ -5,10 +5,12 @@ import loginService from "./services/login";
 import Notification from "./components/Notification";
 import Togglable from "./components/Togglable";
 import BlogForm from "./components/BlogForm";
+import UsersList from "./components/UsersList";
 import { setNotification } from "./reducer/notificationReducer";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchBlogs, createNewBlog, removeBlog } from "./reducer/blogReducer";
 import { initializeUser, loginUser, logoutUser } from "./reducer/loginReducer";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -100,23 +102,67 @@ const App = () => {
     </div>
   );
 
-  return (
-    <div>
-      <Notification />
-      {user === null ? (
-        loginForm()
-      ) : (
+  const Home = () => {
+    return (
+      <div>
+        <Notification />
+        {user === null ? (
+          loginForm()
+        ) : (
+          <div>
+            <p>{user.username}</p>
+            {logoutForm()}
+            <br />
+            <Togglable buttonLabel="Add New Blog" ref={blogFormRef}>
+              <BlogForm createBlog={handleCreateNewBlog} userId={user.userId} />
+            </Togglable>
+            {blogList()}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const Users = () => {
+    return (
+      <div>
+        <h1>Blogs</h1>
+        <Notification />
+        {user === null ? (
+          loginForm()
+        ) : (
+          <div>
+            <p>{user.username}</p>
+            {logoutForm()}
+            <br />
+          </div>
+        )}
         <div>
-          <p>{user.username}</p>
-          {logoutForm()}
-          <br />
-          <Togglable buttonLabel="Add New Blog" ref={blogFormRef}>
-            <BlogForm createBlog={handleCreateNewBlog} userId={user.userId} />
-          </Togglable>
-          {blogList()}
+          <UsersList />
         </div>
-      )}
-    </div>
+      </div>
+    );
+  };
+
+  const padding = {
+    padding: 5,
+  };
+
+  return (
+    <Router>
+      <div>
+        <Link style={padding} to="/">
+          Home
+        </Link>
+        <Link style={padding} to="/users">
+          Users
+        </Link>
+      </div>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/users" element={<Users />} />
+      </Routes>
+    </Router>
   );
 };
 

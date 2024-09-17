@@ -6,6 +6,7 @@ const blogRouter = require("./controllers/blog.controller");
 const userRouter = require("./controllers/users.controller");
 const loginRouter = require("./controllers/login.controller");
 const testRouter = require("./controllers/test.controller");
+const userListRouter = require("./controllers/userList.controller");
 const cors = require("cors");
 
 //INSERT ROUTER
@@ -42,6 +43,7 @@ app.get("/test", (request, response) => {
 app.use("/api/blog", blogRouter);
 app.use("/api/users", userRouter);
 app.use("/api/login", loginRouter);
+app.use("/api/userList", userListRouter);
 
 if (process.env.NODE_ENV === "test") {
   console.log("connected to db");
