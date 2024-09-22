@@ -8,6 +8,7 @@ import { setNotification } from "../reducer/notificationReducer";
 const BlogDetail = () => {
   const [blog, setBlog] = useState(null);
   const [error, setError] = useState(null);
+  const [comment, setComment] = useState("");
   const { id } = useParams();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
@@ -46,6 +47,22 @@ const BlogDetail = () => {
     }
   };
 
+  const handleCommentSubmit = async (event) => {
+    event.preventDefault();
+    if (!comment.trim()) {
+      dispatch(setNotification("Comment cannot be empty", "error", 5000));
+      return;
+    }
+    try {
+      const updatedBlog = await blogsService.addComment(blog.id, comment.trim());
+      setBlog(updatedBlog);
+      setComment("");
+    } catch (error) {
+      console.error("Failed to add comment", error);
+      dispatch(setNotification("Failed to add comment", "error", 5000));
+    }
+  };
+
   return (
     <div>
       <h2>
@@ -59,6 +76,15 @@ const BlogDetail = () => {
       {user && blog.user.id === user.userId && <button onClick={handleDelete}>Delete Blog</button>}
 
       <h3>Comments</h3>
+      <form onSubmit={handleCommentSubmit}>
+        <input
+          type="text"
+          value={comment}
+          onChange={({ target }) => setComment(target.value)}
+          placeholder="Add a comment"
+        />
+        <button type="submit">Add Comment</button>
+      </form>
       {blog.comments && blog.comments.length > 0 ? (
         <ul>
           {blog.comments.map((comment, index) => (

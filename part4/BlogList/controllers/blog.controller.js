@@ -143,4 +143,9 @@ blogRouter.post("/:id/comments", async (request, response, next) => {
   }
 });
 
+const addComment = async (id, comment) => {
+  const response = await axios.post(`${baseUrl}/${id}/comments`, { comment });
+  return response.data;
+};
+
 module.exports = blogRouter;
