@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import blogsService from "../services/blogs";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { likeBlog, removeBlog } from "../reducer/blogReducer";
+import { setNotification } from "../reducer/notificationReducer";
 
 const BlogDetail = () => {
   const [blog, setBlog] = useState(null);
+  const [error, setError] = useState(null);
   const { id } = useParams();
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
 
   useEffect(() => {
     const fetchBlog = async () => {
@@ -16,11 +19,16 @@ const BlogDetail = () => {
         setBlog(fetchedBlog);
       } catch (error) {
         console.error("Failed to fetch blog", error);
+        setError("Blog not found");
       }
     };
 
     fetchBlog();
   }, [id]);
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   if (!blog) {
     return <div>Loading blog data...</div>;
@@ -34,6 +42,7 @@ const BlogDetail = () => {
   const handleDelete = () => {
     if (window.confirm("Are you sure you want to delete this blog?")) {
       dispatch(removeBlog(blog.id));
+      dispatch(setNotification("Blog deleted", "success", 5000));
     }
   };
 
@@ -47,7 +56,18 @@ const BlogDetail = () => {
         {blog.likes} likes <button onClick={handleLike}>Like</button>
       </div>
       <div>Added by {blog.user.name || blog.user.username}</div>
-      <button onClick={handleDelete}>Delete Blog</button>
+      {user && blog.user.id === user.userId && <button onClick={handleDelete}>Delete Blog</button>}
+
+      <h3>Comments</h3>
+      {blog.comments && blog.comments.length > 0 ? (
+        <ul>
+          {blog.comments.map((comment, index) => (
+            <li key={index}>- {comment}</li>
+          ))}
+        </ul>
+      ) : (
+        <p>No comments yet.</p>
+      )}
     </div>
   );
 };
