@@ -24,11 +24,7 @@ const put = async (newObject) => {
   const config = {
     headers: { Authorization: token },
   };
-  const response = await axios.put(
-    baseUrl + "/" + newObject.id,
-    newObject,
-    config
-  );
+  const response = await axios.put(baseUrl + "/" + newObject.id, newObject, config);
   return response.data;
 };
 
@@ -41,4 +37,10 @@ const doDelete = async (id) => {
   return response.data;
 };
 
-export default { getAll, setToken, create, put, doDelete };
+const getById = async (newObject) => {
+  const response = await axios.get(baseUrl + "/" + newObject);
+
+  return response.data;
+};
+
+export default { getAll, setToken, create, put, doDelete, getById };

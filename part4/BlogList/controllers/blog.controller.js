@@ -18,7 +18,7 @@ blogRouter.get("/", async (request, response, next) => {
 
 blogRouter.get("/:id", async (request, response, next) => {
   try {
-    let result = await Blog.findById(request.params.id);
+    let result = await Blog.findById(request.params.id).populate("user", { username: 1, name: 1 });
     response.json(result);
   } catch (err) {
     next(err);

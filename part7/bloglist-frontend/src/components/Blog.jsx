@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import blogService from "../services/blogs";
+import { Link } from "react-router-dom";
+
 import { likeBlog } from "../reducer/blogReducer";
 const Blog = ({ blog, handleDeleteBlog, theCurrentUserId }) => {
   const [visible, setVisible] = useState(false);
@@ -25,26 +27,33 @@ const Blog = ({ blog, handleDeleteBlog, theCurrentUserId }) => {
     marginBottom: 5,
   };
 
+  // return (
+  //   <div style={blogStyle} className="blogItem">
+  //     {blog.title} {blog.author}{" "}
+  //     <button onClick={toggleVisibility}>View Detail</button>
+  //     {visible && (
+  //       <>
+  //         <div>
+  //           {blog.url}
+  //           <br />
+  //           {blog.likes} <button onClick={handleAddLike}>Like</button>
+  //           <br />
+  //           {blog.user.username}
+  //         </div>
+  //         {blog.user.id === theCurrentUserId && (
+  //           <button onClick={() => handleDeleteBlog(blog.id)}>
+  //             Delete Blog
+  //           </button>
+  //         )}
+  //       </>
+  //     )}
+  //   </div>
+  // );
   return (
     <div style={blogStyle} className="blogItem">
-      {blog.title} {blog.author}{" "}
-      <button onClick={toggleVisibility}>View Detail</button>
-      {visible && (
-        <>
-          <div>
-            {blog.url}
-            <br />
-            {blog.likes} <button onClick={handleAddLike}>Like</button>
-            <br />
-            {blog.user.username}
-          </div>
-          {blog.user.id === theCurrentUserId && (
-            <button onClick={() => handleDeleteBlog(blog.id)}>
-              Delete Blog
-            </button>
-          )}
-        </>
-      )}
+      <Link to={`/blogs/${blog.id}`}>
+        {blog.title} {blog.author}
+      </Link>
     </div>
   );
 };
