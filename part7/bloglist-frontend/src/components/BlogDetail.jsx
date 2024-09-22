@@ -4,6 +4,17 @@ import blogsService from "../services/blogs";
 import { useDispatch, useSelector } from "react-redux";
 import { likeBlog, removeBlog } from "../reducer/blogReducer";
 import { setNotification } from "../reducer/notificationReducer";
+import {
+  Container,
+  Typography,
+  Button,
+  TextField,
+  List,
+  ListItem,
+  ListItemText,
+  Divider,
+  Paper,
+} from "@mui/material";
 
 const BlogDetail = () => {
   const [blog, setBlog] = useState(null);
@@ -64,38 +75,58 @@ const BlogDetail = () => {
   };
 
   return (
-    <div>
-      <h2>
+    <Container>
+      <Typography variant="h4" component="h1" gutterBottom>
         {blog.title} by {blog.author}
-      </h2>
-      <a href={blog.url}>{blog.url}</a>
-      <div>
-        {blog.likes} likes <button onClick={handleLike}>Like</button>
-      </div>
-      <div>Added by {blog.user.name || blog.user.username}</div>
-      {user && blog.user.id === user.userId && <button onClick={handleDelete}>Delete Blog</button>}
-
-      <h3>Comments</h3>
+      </Typography>
+      <Typography variant="body1" paragraph>
+        <a href={blog.url}>{blog.url}</a>
+      </Typography>
+      <Typography variant="body1">
+        {blog.likes} likes{" "}
+        <Button variant="contained" color="primary" onClick={handleLike}>
+          Like
+        </Button>
+      </Typography>
+      <Typography variant="body1" paragraph>
+        Added by {blog.user.name || blog.user.username}
+      </Typography>
+      {user && blog.user.id === user.userId && (
+        <Button variant="contained" color="secondary" onClick={handleDelete}>
+          Delete Blog
+        </Button>
+      )}
+      <Divider sx={{ marginY: 2 }} />
+      <Typography variant="h5" component="h2" gutterBottom>
+        Comments
+      </Typography>
       <form onSubmit={handleCommentSubmit}>
-        <input
-          type="text"
+        <TextField
+          label="Add a comment"
+          variant="outlined"
+          fullWidth
+          margin="normal"
           value={comment}
           onChange={({ target }) => setComment(target.value)}
-          placeholder="Add a comment"
         />
-        <button type="submit">Add Comment</button>
+        <Button variant="contained" color="primary" type="submit" sx={{ mt: 1 }}>
+          Add Comment
+        </Button>
       </form>
       {blog.comments && blog.comments.length > 0 ? (
-        <ul>
+        <List>
           {blog.comments.map((comment, index) => (
-            <li key={index}>- {comment}</li>
+            <Paper key={index} sx={{ padding: 1, marginY: 1 }}>
+              <ListItem>
+                <ListItemText primary={comment} />
+              </ListItem>
+            </Paper>
           ))}
-        </ul>
+        </List>
       ) : (
-        <p>No comments yet.</p>
+        <Typography variant="body1">No comments yet.</Typography>
       )}
-    </div>
+    </Container>
   );
 };
-
 export default BlogDetail;

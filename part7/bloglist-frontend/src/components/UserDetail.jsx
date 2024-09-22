@@ -1,8 +1,8 @@
-// components/UserDetail.jsx
-
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import userListService from "../services/userList";
+import { Container, Typography, List, ListItem, ListItemText } from "@mui/material";
+import { Link } from "react-router-dom";
 
 const UserDetail = () => {
   const [user, setUser] = useState(null);
@@ -26,17 +26,25 @@ const UserDetail = () => {
   }
 
   return (
-    <div>
-      <h2>{user.name || user.username}</h2>
-      <h3>Added blogs</h3>
-      <ul>
-        {user.blogs.map((blog) => (
-          <li key={blog.id}>
-            {blog.title} by {blog.author}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <Container>
+      <Typography variant="h4" component="h1" gutterBottom>
+        {user.name || user.username}
+      </Typography>
+      <Typography variant="h5" component="h2" gutterBottom>
+        Added blogs
+      </Typography>
+      {user.blogs && user.blogs.length > 0 ? (
+        <List>
+          {user.blogs.map((blog) => (
+            <ListItem key={blog.id} button component={Link} to={`/blogs/${blog.id}`}>
+              <ListItemText primary={blog.title} secondary={`by ${blog.author}`} />
+            </ListItem>
+          ))}
+        </List>
+      ) : (
+        <Typography variant="body1">No blogs added.</Typography>
+      )}
+    </Container>
   );
 };
 

@@ -2,8 +2,18 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserList } from "../reducer/userListReducer";
 import { Link } from "react-router-dom";
+import {
+  Container,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Paper,
+} from "@mui/material";
 
-export default function UsersList() {
+const UsersList = () => {
   const dispatch = useDispatch();
   const userList = useSelector((state) => state.userList);
 
@@ -12,24 +22,32 @@ export default function UsersList() {
   }, [dispatch]);
 
   return (
-    <div>
-      <h2>Users</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Blogs Created</th>
-          </tr>
-        </thead>
-        <tbody>
-          {userList.map((user) => (
-            <tr key={user.id}>
-              <Link to={`/users/${user.id}`}>{user.name || user.username}</Link>{" "}
-              <td>{user.blogCount}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <Container>
+      <Typography variant="h4" component="h1" gutterBottom>
+        Users
+      </Typography>
+      <Paper>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>Blogs Created</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {userList.map((user) => (
+              <TableRow key={user.id}>
+                <TableCell>
+                  <Link to={`/users/${user.id}`}>{user.name || user.username}</Link>
+                </TableCell>
+                <TableCell>{user.blogCount}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Paper>
+    </Container>
   );
-}
+};
+
+export default UsersList;
