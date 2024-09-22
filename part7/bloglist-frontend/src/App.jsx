@@ -1,29 +1,22 @@
-import { useState, useEffect, useRef } from "react";
-import Blog from "./components/Blog";
-import blogService from "./services/blogs";
-import loginService from "./services/login";
-import Notification from "./components/Notification";
-import Togglable from "./components/Togglable";
-import BlogForm from "./components/BlogForm";
-import UsersList from "./components/UsersList";
-import { setNotification } from "./reducer/notificationReducer";
+import { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchBlogs, createNewBlog, removeBlog } from "./reducer/blogReducer";
-import { initializeUser, loginUser, logoutUser } from "./reducer/loginReducer";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { fetchBlogs, createNewBlog } from "./reducer/blogReducer";
+import { initializeUser, logoutUser } from "./reducer/loginReducer";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Notification from "./components/Notification";
+import NavBar from "./components/NavBar";
+import LoginForm from "./components/LoginForm";
+import Home from "./components/Home";
+import Users from "./components/Users";
 import UserDetail from "./components/UserDetail";
 import BlogDetail from "./components/BlogDetail";
 
 const App = () => {
   const dispatch = useDispatch();
 
-  const blogs = useSelector((state) => state.blogs);
   const user = useSelector((state) => state.user);
 
   const blogFormRef = useRef();
-
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
 
   useEffect(() => {
     dispatch(fetchBlogs());
@@ -35,137 +28,35 @@ const App = () => {
     dispatch(createNewBlog(blogObject));
   };
 
-  const handleLogin = async (event) => {
-    event.preventDefault();
-    dispatch(loginUser({ username, password }));
-    setUsername("");
-    setPassword("");
-  };
-
-  const handleLogout = (event) => {
+  const handleLogout = async (event) => {
     event.preventDefault();
     dispatch(logoutUser());
-    setUsername("");
-    setPassword("");
-  };
-
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <div>
-        username{" "}
-        <input
-          type="text"
-          value={username}
-          name="username"
-          onChange={({ target }) => setUsername(target.value)}
-          data-testid="username"
-        />
-      </div>
-      <div>
-        password{" "}
-        <input
-          type="password"
-          value={password}
-          name="password"
-          onChange={({ target }) => setPassword(target.value)}
-          data-testid="password"
-        />
-      </div>
-      <div>
-        <button type="submit">LOGIN</button>
-      </div>
-    </form>
-  );
-
-  const logoutForm = () => (
-    <form onSubmit={handleLogout}>
-      <button type="submit">LOGOUT</button>
-    </form>
-  );
-
-  const handleDeleteBlog = async (id) => {
-    if (!confirm("Are you sure you want to delete this?")) {
-      return;
-    }
-    dispatch(removeBlog(id));
-  };
-
-  const blogList = () => (
-    <div>
-      <h2>blogs</h2>
-      {blogs.map((blog) => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-          handleDeleteBlog={handleDeleteBlog}
-          theCurrentUserId={user?.userId} // Safe access to userId
-        />
-      ))}
-    </div>
-  );
-
-  const Home = () => {
-    return (
-      <div>
-        <Notification />
-        {user === null ? (
-          loginForm()
-        ) : (
-          <div>
-            <p>{user.username}</p>
-            {logoutForm()}
-            <br />
-            <Togglable buttonLabel="Add New Blog" ref={blogFormRef}>
-              <BlogForm createBlog={handleCreateNewBlog} userId={user.userId} />
-            </Togglable>
-            {blogList()}
-          </div>
-        )}
-      </div>
-    );
-  };
-
-  const Users = () => {
-    return (
-      <div>
-        <h1>Blogs</h1>
-        <Notification />
-        {user === null ? (
-          loginForm()
-        ) : (
-          <div>
-            <p>{user.username}</p>
-            {logoutForm()}
-            <br />
-          </div>
-        )}
-        <div>
-          <UsersList />
-        </div>
-      </div>
-    );
-  };
-
-  const padding = {
-    padding: 5,
   };
 
   return (
     <Router>
       <div>
-        <Link style={padding} to="/">
-          Home
-        </Link>
-        <Link style={padding} to="/users">
-          Users
-        </Link>
+        <NavBar user={user} handleLogout={handleLogout} />
+
+        <Notification />
+
+        <Routes>
+          <Route
+            path="/"
+            element={
+              user === null ? (
+                <LoginForm />
+              ) : (
+                <Home blogFormRef={blogFormRef} handleCreateNewBlog={handleCreateNewBlog} />
+              )
+            }
+          />
+          <Route path="/users" element={user === null ? <LoginForm /> : <Users />} />
+          <Route path="/users/:id" element={user === null ? <LoginForm /> : <UserDetail />} />
+          <Route path="/blogs/:id" element={user === null ? <LoginForm /> : <BlogDetail />} />
+          <Route path="/login" element={<LoginForm />} />
+        </Routes>
       </div>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/users" element={<Users />} />
-        <Route path="/users/:id" element={<UserDetail />} />
-        <Route path="/blogs/:id" element={<BlogDetail />} />
-      </Routes>
     </Router>
   );
 };
