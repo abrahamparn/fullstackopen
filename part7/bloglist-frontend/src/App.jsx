@@ -11,6 +11,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchBlogs, createNewBlog, removeBlog } from "./reducer/blogReducer";
 import { initializeUser, loginUser, logoutUser } from "./reducer/loginReducer";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import UserDetail from "./components/UserDetail";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -161,6 +162,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/users" element={<Users />} />
+        <Route path="/users/:id" element={<UserDetail />} /> {/* Add this line */}
       </Routes>
     </Router>
   );

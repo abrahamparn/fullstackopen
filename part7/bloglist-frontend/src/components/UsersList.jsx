@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserList } from "../reducer/userListReducer";
+import { Link } from "react-router-dom";
 
 export default function UsersList() {
   const dispatch = useDispatch();
@@ -23,7 +24,7 @@ export default function UsersList() {
         <tbody>
           {userList.map((user) => (
             <tr key={user.id}>
-              <td>{user.username || user.name}</td>
+              <Link to={`/users/${user.id}`}>{user.name || user.username}</Link>{" "}
               <td>{user.blogCount}</td>
             </tr>
           ))}

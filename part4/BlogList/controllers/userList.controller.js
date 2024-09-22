@@ -22,4 +22,27 @@ userListRouter.get("/", async (request, response, next) => {
   }
 });
 
+userListRouter.get("/:id", async (request, response, next) => {
+  try {
+    const user = await User.findById(request.params.id).populate("blogs", {
+      title: 1,
+      author: 1,
+      url: 1,
+    });
+
+    if (!user) {
+      response.status(400).json({ error: "User not found" });
+    }
+    response.json({
+      id: user.id,
+      username: user.username,
+      name: user.name,
+      blogs: user.blogs,
+    });
+  } catch (exception) {
+    console.error(exception);
+    next(exception);
+  }
+});
+
 module.exports = userListRouter;
